@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { Route, Routes } from 'react-router'
+import Recipes from './components/Recipes/Recipes'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -9,7 +10,7 @@ function App() {
     <>
     <main>
       <Routes>
-        
+        <Route path="/recipes" element={<Recipes/>}></Route>
       </Routes>
     </main>
     </>
