@@ -1,5 +1,4 @@
 const RecipeCard = ({recipe})=>{
-    console.log(recipe.author)
     return(
         <div>
             <div>
