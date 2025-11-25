@@ -55,6 +55,11 @@ const RecipeEdit = ()=>{
         setFormData(newInstruction);        
     }
     const removeIngredient =  (event)=>{
+        console.log(event.target.parentElement);
+        const ingredientDiv =event.target.parentElement ;
+        console.log(ingredientDiv.children)
+    }
+    const dragStart = ()=>{
 
     }
     console.log(formData)
@@ -73,7 +78,7 @@ const RecipeEdit = ()=>{
                         <i className="fa fa-plus-circle" aria-hidden="true"></i>    
                     </button>
                     <IngredientChip ingredients={formData.ingredients}>
-                        <button>
+                        <button onClick={removeIngredient}>
                             Remove
                         </button>
                     </IngredientChip>
@@ -87,11 +92,11 @@ const RecipeEdit = ()=>{
                 <section >
                     <h3>Instructions</h3>
                     <button onClick={addInstruciton}>Add instruction</button>
-                    <ol>
+                    <ol onDragStart={dragStart}>
                         {
                             formData.instructions.map((instruction, index)=>{
                                 return(
-                                    <li key={index}>
+                                    <li key={index} draggable="true">
                                         <textarea value={instruction}></textarea>
                                         <button>Remove</button>
                                     </li>

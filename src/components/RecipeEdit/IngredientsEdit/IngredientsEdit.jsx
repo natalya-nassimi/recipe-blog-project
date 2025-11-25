@@ -3,6 +3,7 @@ const IngredientChip = ({ingredients, children})=>{
     return (
         <div>
             {ingredients.map((ingredient, index)=>{
+                console.log(ingredient)
                 return (
                     <div className="form-control" key={index}>
                         <label htmlFor={ingredient.name + `name`}>Ingredient name</label>
