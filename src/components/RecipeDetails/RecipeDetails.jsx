@@ -11,6 +11,7 @@ const RecipeDetails = () => {
                 const { data } = await recipeShow(recipeId);
                 setLoading(false)
                 setRecipe(data);
+                console.log(data)
             } catch (error) {
 
             }
@@ -24,13 +25,17 @@ const RecipeDetails = () => {
                     <h1>{recipe.name}</h1>
                     <p>{recipe.author?.username}</p>
                     <p>{recipe?.createdAt.split("T")[0]}</p>
+                    <p>{recipe.preparationTime}</p>
                 </section>
                 <section >
-                    {/*recipe.ingrdients.map(ingredient=>{
+                    {recipe.ingredients.map(ingredient=>{
+                        console.log(ingredient.measurement)
+                        return(
                         <div>
-                            <p>{`${ingredient.measurement}` `${ingredient.measurement>1?ingredient.unit+`s`: ingredient.unit}`} </p>
+                            <p>{ingredient.measurement +` ${ingredient.measurement>1?ingredient.unit+`s`: ingredient.unit}` + ` of ${ingredient.name}`} </p>
                         </div>
-                    })*/}
+                        )
+                    })}
                 </section>
                 <section className="instrutions">
                     <h2>Instructions</h2>
