@@ -54,7 +54,7 @@ const SignUp = () => {
 
                 <div className='form-control'>
                     <label hidden htmlFor='password'>Password</label>
-                    <input type='text' name='password' id='password' placeholder='Password' onChange={handleChange} required />
+                    <input type='password' name='password' id='password' placeholder='Password' onChange={handleChange} required />
                     { error.password && <p className='error-message'>{error.password}</p> }
                 </div>
 

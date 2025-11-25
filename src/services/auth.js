@@ -7,3 +7,7 @@ const api = axios.create({
 export const signUpService = (formData) => {
     return api.post('/sign-up', formData)
 }
+
+export const signInService = (formData) => {
+    return api.post('/sign-in', formData)
+}
