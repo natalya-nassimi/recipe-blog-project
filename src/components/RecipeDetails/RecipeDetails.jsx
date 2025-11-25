@@ -25,6 +25,13 @@ const RecipeDetails = () => {
                     <p>{recipe.author?.username}</p>
                     <p>{recipe?.createdAt.split("T")[0]}</p>
                 </section>
+                <section >
+                    {/*recipe.ingrdients.map(ingredient=>{
+                        <div>
+                            <p>{`${ingredient.measurement}` `${ingredient.measurement>1?ingredient.unit+`s`: ingredient.unit}`} </p>
+                        </div>
+                    })*/}
+                </section>
                 <section className="instrutions">
                     <h2>Instructions</h2>
                     <ol>
