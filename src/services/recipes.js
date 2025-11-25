@@ -1,8 +1,7 @@
 import axios from "axios"
 const api = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL}/recipes`
-    
-})
+});
 
 
 export const recipeIndex = ()=>{
@@ -11,4 +10,12 @@ export const recipeIndex = ()=>{
 
 export const recipeShow = (recipeId)=>{
     return api.get(`/${recipeId}`);
+}
+
+export const recipeEdit = (recipeId, formData)=>{
+    return api.put(`/${recipeId}`, formData, {
+        // headers: {
+        //     Authorization:
+        // }
+    });
 }
