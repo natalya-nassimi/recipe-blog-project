@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router'
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
-        username: " ",
-        email: " ",
-        password: " ",
-        confirmPassword: " "
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
     })
 
     const [error, setError] = useState("")
@@ -36,8 +36,9 @@ const SignUp = () => {
 
     return (
         <>
-            <h1>Sign Up</h1>
-            <form onSubmit={handleSubmit}>
+        <div className='signup-container'>
+            <h1>Create an account</h1>
+            <form className='signup-form' onSubmit={handleSubmit}>
 
                 <div className='form-control'>
                     <label hidden htmlFor='username'>Username</label>
@@ -63,11 +64,12 @@ const SignUp = () => {
                     { error.confirmPassword && <p className='error-message'>{error.confirmPassword}</p> }
                 </div>
 
-                <button type='submit'>Creat account</button>
+                <button className='signup-btn' type='submit'>Creat account</button>
 
                 {error.message && <p className='error-message'>{error.message}</p> }
 
             </form>
+        </div>
         </>
     )
 }
