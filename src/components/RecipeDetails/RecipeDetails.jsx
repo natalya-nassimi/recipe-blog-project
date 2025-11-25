@@ -11,7 +11,6 @@ const RecipeDetails = () => {
                 const { data } = await recipeShow(recipeId);
                 setLoading(false)
                 setRecipe(data);
-                console.log(data)
             } catch (error) {
 
             }
@@ -29,7 +28,6 @@ const RecipeDetails = () => {
                 </section>
                 <section >
                     {recipe.ingredients.map(ingredient=>{
-                        console.log(ingredient.measurement)
                         return(
                         <div>
                             <p>{ingredient.measurement +` ${ingredient.measurement>1?ingredient.unit+`s`: ingredient.unit}` + ` of ${ingredient.name}`} </p>
