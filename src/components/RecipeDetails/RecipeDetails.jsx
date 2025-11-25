@@ -1,25 +1,39 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { recipeShow } from "../../services/recipes";
 import { useParams } from "react-router";
-const RecipeDetails =  ()=> {
+const RecipeDetails = () => {
     const [recipe, setRecipe] = useState({})
-    const {recipeId} =  useParams();
-    useEffect(()=>{
-        const getRecipe =  async()=>{
+    const [loading, setLoading] = useState(true);
+    const { recipeId } = useParams();
+    useEffect(() => {
+        const getRecipe = async () => {
             try {
-                const {data}  = await recipeShow(recipeId);   
-                setRecipe(data);        
+                const { data } = await recipeShow(recipeId);
+                setLoading(false)
+                setRecipe(data);
             } catch (error) {
-                
+
             }
         }
         getRecipe();
     }, [])
     return (
-        <div>
-            <h1>{recipe.name}</h1>
-        </div>
+        loading ? <p>Loading ...</p> :
+            <>
+                <section className="titleCard">
+                    <h1>{recipe.name}</h1>
+                    <p>{recipe.author?.username}</p>
+                    <p>{recipe?.createdAt.split("T")[0]}</p>
+                </section>
+                <section className="instrutions">
+                    <h2>Instructions</h2>
+                    <ol>
+                        {recipe.instructions.map(instruction=>{
+                            return <li>{instruction}</li>
+                        })}
+                    </ol>
+                </section>
+            </>
     )
 }
 
