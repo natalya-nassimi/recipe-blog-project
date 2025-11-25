@@ -28,8 +28,8 @@ const RecipeDetails = () => {
                 <section className="instrutions">
                     <h2>Instructions</h2>
                     <ol>
-                        {recipe.instructions.map(instruction=>{
-                            return <li>{instruction}</li>
+                        {recipe.instructions.map((instruction, index)=>{
+                            return <li key={index}>{instruction}</li>
                         })}
                     </ol>
                 </section>
