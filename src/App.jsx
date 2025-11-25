@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { Route, Routes } from 'react-router'
+import Navbar from './components/Navbar/Navbar'
 
 // ? Component Imports
 import Recipes from './components/Recipes/Recipes'
@@ -14,6 +15,7 @@ function App() {
 
   return (
     <>
+    <Navbar />
     <main>
       <Routes>
         <Route path="/recipes" element={<Recipes/>}></Route>

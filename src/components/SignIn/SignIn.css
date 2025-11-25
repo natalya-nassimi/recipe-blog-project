@@ -1,0 +1,68 @@
+.signin-container {
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 20px;
+    background: rgba(222, 238, 243, 0.862);
+    box-shadow: 0 5px 25px rgba(83, 154, 217, 0.221);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.signin-container h1 {
+    font-size: 30px;
+    margin-bottom: 30px;
+    font-weight: 300;
+    color: rgb(0, 0, 0);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.form-control {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control input {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 100;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid rgb(120, 120, 120);
+    transition: all 0.3s ease;
+    padding: 1rem;
+}
+
+.form-control input:focus {
+    border-color: #265d9c;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 87, 134, 0.617);
+}
+
+.error-message {
+    color: #d4150e;
+    font-size: 1.1rem;
+    margin-top: 15px;
+    text-align: left;
+}
+
+.signin-btn {
+    background-color: #124075;
+    color: white;
+    padding: 15px;
+    margin-top: 5px;
+    border-radius: 10px;
+    font-size: 1.15rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.signin-btn:hover {
+    background-color: rgb(234, 245, 255);
+    color: black;
+}
