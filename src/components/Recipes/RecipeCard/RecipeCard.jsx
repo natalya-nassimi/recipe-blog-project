@@ -1,3 +1,4 @@
+import './RecipeCard.css'
 import { useNavigate } from "react-router";
 const RecipeCard = ({recipe})=>{
 
@@ -6,20 +7,20 @@ const RecipeCard = ({recipe})=>{
 
     // ? handler functions
 
-    const handleClick = (event) => {
-        console.log(recipe._id);
+    const handleClick = () => {
         navigate(`/recipes/${recipe._id}`)
     }
     return(
-        <div onClick={handleClick} >
+        <div className='recipe-card' onClick={handleClick} >
             {/*image div */}
             <div>
                 <img src={recipe.image} alt="" />
             </div>
             {/*text card div */}
-            <div>
-                <p>{recipe.name}</p>
-                <p>{recipe.preparationTime}</p>
+            <div className='recipe-card-content'>
+                <p className='recipe-name'> {recipe.name}</p>
+                <p className='prep-time'>Preparation Time: {recipe.preparationTime}</p>
+                <p className='author'>Posted By: {recipe.author.username}</p>
             </div>
         </div>
     )
