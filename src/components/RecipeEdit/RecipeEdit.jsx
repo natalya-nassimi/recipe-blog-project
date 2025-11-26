@@ -23,15 +23,28 @@ const RecipeEdit = () => {
                 setFormData(data)
                 setIsLoading(false)
             } catch (error) {
-
+                 if (error.response.status === 500) {
+                    setError({ message: 'Something went wrong!' })
+                } else {
+                    setError(error.response.data)
+                }
             }
         }
         getFormData();
     }, [])
     const handleSubmit = async (event) => {
-        event.preventDefault();
-        await recipeEdit(recipeId, formData);
-        navigate(`/recipes/${recipeId}`);
+        try {
+            event.preventDefault();
+            await recipeEdit(recipeId, formData);
+            navigate(`/recipes/${recipeId}`);            
+        } catch (error) {
+            if (error.response.status === 500) {
+                setError({ message: 'Something went wrong!' })
+            } else {
+                setError(error.response.data)
+            }
+        }
+
     }
     const handleChange = (event) => {
         setFormData({
