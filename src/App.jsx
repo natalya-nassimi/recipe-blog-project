@@ -20,6 +20,7 @@ function App() {
     <Navbar />
     <main>
       <Routes>
+        <Route path="/" element={<Recipes/>}></Route>
         <Route path="/recipes" element={<Recipes/>}></Route>
         <Route path="/recipes/:recipeId" element={<RecipeDetails/>} ></Route>
         <Route path="/recipes/:recipeId/edit" element={<RecipeEdit/>} ></Route>

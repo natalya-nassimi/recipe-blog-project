@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState, useContext} from "react";
+import { Navigate, useNavigate } from "react-router";
+import { UserContext } from "../../contexts/UserContext";
 
 import { recipeCreate } from "../../services/recipes";
 const RecipeCreate = () => {
+    const { user } = useContext(UserContext)
     const [formData, setFormData] = useState({
         name: "",
         ingredients: [],
@@ -10,20 +12,21 @@ const RecipeCreate = () => {
         image: "",
         instructions: []
     })
-    const [error, setError] = useState("");
+    const [errorData, setErrorData] = useState({});
     const [progress, setProgress] = useState(0);
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
+        event.preventDefault();
         try {
-            event.preventDefault();
-            await recipeCreate(formData);
-            navigate(`/recipes`);            
+
+            const {data} = await recipeCreate(formData);
+            navigate(`/recipes/${data._id}`);            
         } catch (error) {
             if (error.response.status === 500) {
-                setError({ message: 'Something went wrong!' })
+                return setErrorData({ message: 'Something went wrong!' })
             } else {
-                setError(error.response.data)
+                setErrorData(error.response.data)
             }            
         }
 
@@ -76,7 +79,7 @@ const RecipeCreate = () => {
     const removeInstructions = (event) => {
         event.preventDefault();
         const instructionDiv = event.target.parentElement;
-        const index = parseInt(instructionDiv.children[1].name.split("-")[1]);
+        const index = parseInt(instructionDiv.children[0].name.split("-")[1]);
         const newFormData = { ...formData };
         newFormData.instructions = newFormData.instructions.slice(0, index).concat(newFormData.instructions.slice(index + 1));
         setFormData(newFormData);
@@ -90,6 +93,9 @@ const RecipeCreate = () => {
             case 2:
                 return false;
             case 3:
+                if(formData.instructions.length<1){
+                    return true
+                }
                 return formData.instructions.some(ingredient=> ingredient.trim()== "" )
             case 4:
                 return false
@@ -165,7 +171,7 @@ const RecipeCreate = () => {
                     <section>
                         <div className="form-control">
                             <label htmlFor="preparationTime">How long does it take to prepare in hours</label>
-                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} onChange={handleChange} />
+                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} min="0" onChange={handleChange} />
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
@@ -183,7 +189,6 @@ const RecipeCreate = () => {
                                 formData.instructions.map((instruction, index) => {
                                     return (
                                         <li key={index} draggable="true">
-                                            <label htmlFor={`instruction-${index}`}>Step {`${index+1}`}</label>
                                             <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange} required></textarea>
                                             <button onClick={removeInstructions}>Remove</button>
                                         </li>
@@ -222,6 +227,10 @@ const RecipeCreate = () => {
                 )
         }
     }
+    if (!user) {
+        return <Navigate to="/sign-in" />
+    }
+
     return (
             <section>
                 <form action="" onSubmit={handleSubmit}>

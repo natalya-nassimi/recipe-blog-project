@@ -24,12 +24,13 @@ const RecipeEdit = () => {
         const getFormData = async () => {
             try {
                 const { data } = await recipeShow(recipeId);
-                console.log("here")
+
                 if(data.preparationTime ===null){
                     data.preparationTime = "";
                 }
                 setFormData(data);
             } catch (error) {
+                
                 const {status, data} = error.response;
                  if (status === 500) {
                     setErrorData({ message: 'Something went wrong. Please try again.' });
@@ -106,7 +107,8 @@ const RecipeEdit = () => {
     const removeInstructions = (event) => {
         event.preventDefault();
         const instructionDiv = event.target.parentElement;
-        const index = parseInt(instructionDiv.children[1].name.split("-")[1]);
+        const index = parseInt(instructionDiv.children[0].name.split("-")[1]);
+        console.log(index)
         const newFormData = { ...formData };
         newFormData.instructions = newFormData.instructions.slice(0, index).concat(newFormData.instructions.slice(index + 1));
         setFormData(newFormData);
@@ -118,12 +120,15 @@ const RecipeEdit = () => {
             case 1:
                 return formData.ingredients.some(ingredient=> ingredient.name.trim()== "" || ingredient.measurement=="" || ingredient.unit =="");
             case 2:
-                if(formData.preparationTime< 1){
-                    setErrorData("")
-                    return true
-                }
+                // if(formData.preparationTime< 1){
+                //     // setErrorData({})
+                //     return true
+                // }
                 return false;
             case 3:
+                if(formData.instructions.length<1){
+                    return true
+                }
                 return formData.instructions.some(ingredient=> ingredient.trim()== "" )
             case 4:
                 return false
@@ -168,9 +173,10 @@ const RecipeEdit = () => {
                                         <label htmlFor={ingredient.name + `-name`}>Ingredient name</label>
                                         <input type="text" name={ingredient.name + `-name`} value={ingredient.name} onChange={handleIngredientChange} />
                                         <label htmlFor={ingredient.name + `-measurement`}>Quantity</label>
-                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange} />
+                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} min="0" onChange={handleIngredientChange} />
                                         <label htmlFor={ingredient.name + `-unit`}>Unit</label>
                                         <select name={ingredient.name + `-unit`} id="" value={ingredient.unit} onChange={handleIngredientChange}>
+                                            <option value="">Choose a unit type</option>
                                             <option value="cup">cup</option>
                                             <option value="gallon">gallon</option>
                                             <option value="gram">gram</option>
@@ -257,7 +263,7 @@ const RecipeEdit = () => {
     if (!user) {
         return <Navigate to="/sign-in" />
     }    
-    toast(errorData.message)
+    // toast("")
     
     return (
 
@@ -266,7 +272,7 @@ const RecipeEdit = () => {
             <section>
                 <form action="" onSubmit={handleSubmit}>
                     {currentPage()}
-                    {error?<ToastContainer/>: null}
+                    {errorData?<ToastContainer/>: null}
                 </form>
             </section>
 
