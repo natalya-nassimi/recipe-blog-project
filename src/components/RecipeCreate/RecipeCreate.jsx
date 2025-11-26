@@ -168,7 +168,7 @@ const RecipeCreate = () => {
                                 formData.instructions.map((instruction, index) => {
                                     return (
                                         <li key={index} draggable="true">
-                                            <label htmlFor={`instruction-${index}`}>Step {`${index}`}</label>
+                                            <label htmlFor={`instruction-${index}`}>Step {`${index+1}`}</label>
                                             <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange}></textarea>
                                             <button onClick={removeInstructions}>Remove</button>
                                         </li>
