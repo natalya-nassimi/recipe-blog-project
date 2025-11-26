@@ -38,6 +38,13 @@ const RecipeEdit = () => {
             [event.target.name]: event.target.value
         });
     }
+    const handleIngredientChange =  (event)=>{
+        const newFormData = {...formData};
+        const [element, field] = event.target.name.split('-');
+        const positionIdx =  newFormData.ingredients.findIndex(ingredient=> ingredient["name"] ==element);
+        newFormData.ingredients[positionIdx][field] = event.target.value;
+        setFormData(newFormData)
+    }
     const addIngredient = (event) => {
         event.preventDefault();
         const newIngredient = { ...formData };
@@ -92,20 +99,20 @@ const RecipeEdit = () => {
                             {formData.ingredients.map((ingredient, index) => {
                                 return (
                                     <div className="form-control" key={index}>
-                                        <label htmlFor={ingredient.name + `name`}>Ingredient name</label>
-                                        <input type="text" name={ingredient.name + `name`} value={ingredient.name} />
-                                        <label htmlFor={ingredient.name + `measurement`}>Quantity</label>
-                                        <input type="number" name={ingredient.name + `measurement`} />
-                                        <label htmlFor={ingredient.name + `unit`}>Unit</label>
-                                        <select name="" id="">
-                                            <option value="">cup</option>
-                                            <option value="">gallon</option>
-                                            <option value="">gram</option>
-                                            <option value="">litre</option>
-                                            <option value="">kilogram</option>
-                                            <option value="">ounce</option>
-                                            <option value="">quart</option>
-                                            <option value="">tbsp</option>
+                                        <label htmlFor={ingredient.name + `-name`}>Ingredient name</label>
+                                        <input type="text" name={ingredient.name + `-name`} value={ingredient.name}  onChange={handleIngredientChange}/>
+                                        <label htmlFor={ingredient.name + `-measurement`}>Quantity</label>
+                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange}/>
+                                        <label htmlFor={ingredient.name + `-unit`}>Unit</label>
+                                        <select name={ingredient.name + `-unit`} id="" value={ingredient.unit} onChange={handleIngredientChange}>
+                                            <option value="cup">cup</option>
+                                            <option value="gallon">gallon</option>
+                                            <option value="gram">gram</option>
+                                            <option value="litre">litre</option>
+                                            <option value="kilogram">kilogram</option>
+                                            <option value="ounce">ounce</option>
+                                            <option value="quart">quart</option>
+                                            <option value="tbsp">tbsp</option>
                                         </select>
                                         <button onClick={removeIngredient}>
                                             Remove
