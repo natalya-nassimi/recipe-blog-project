@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import { recipeShow } from "../../services/recipes";
-
+import { recipeEdit } from "../../services/recipes";
 const RecipeEdit = () => {
     const [recipe, setRecipe] = useState({});
     const [formData, setFormData] = useState({
@@ -12,7 +12,8 @@ const RecipeEdit = () => {
         image: "",
         instructions: []
     })
-    const [isLoading, setIsLoading] = useState(true)
+    const [progress, setProgress] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
     const { recipeId } = useParams();
     const navigate = useNavigate();
     useEffect(() => {
@@ -27,10 +28,10 @@ const RecipeEdit = () => {
         }
         getFormData();
     }, [])
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-
-        navigate(`/recipes/${recipeId}`)
+        await recipeEdit(recipeId, formData);
+        navigate(`/recipes/${recipeId}`);
     }
     const handleChange = (event) => {
         setFormData({
@@ -38,18 +39,18 @@ const RecipeEdit = () => {
             [event.target.name]: event.target.value
         });
     }
-    const handleIngredientChange =  (event)=>{
-        const newFormData = {...formData};
+    const handleIngredientChange = (event) => {
+        const newFormData = { ...formData };
         const [element, field] = event.target.name.split('-');
-        const positionIdx =  newFormData.ingredients.findIndex(ingredient=> ingredient["name"] ==element);
+        const positionIdx = newFormData.ingredients.findIndex(ingredient => ingredient["name"] == element);
         newFormData.ingredients[positionIdx][field] = event.target.value;
-        setFormData(newFormData)
+        setFormData(newFormData);
     }
-    const handleInstructionChange = (event)=>{
-        const idx =parseInt(event.target.name.split("-")[1]);
-        const newFormData = {...formData};
+    const handleInstructionChange = (event) => {
+        const idx = parseInt(event.target.name.split("-")[1]);
+        const newFormData = { ...formData };
         newFormData.instructions[idx] = event.target.value;
-        setFormData(newFormData)
+        setFormData(newFormData);
     }
     const addIngredient = (event) => {
         event.preventDefault();
@@ -64,7 +65,7 @@ const RecipeEdit = () => {
     const addInstruciton = (event) => {
         event.preventDefault();
         const newFormData = { ...formData };
-        newFormData.instructions.push("")
+        newFormData.instructions.push("");
         setFormData(newFormData);
     }
     const removeIngredient = (event) => {
@@ -72,7 +73,7 @@ const RecipeEdit = () => {
         const ingredientDiv = event.target.parentElement;
         const ingredientName = ingredientDiv.children[1].value;
         const newFormData = { ...formData };
-        const index = newFormData.ingredients.findIndex(ingredient => ingredient.name === ingredientName)
+        const index = newFormData.ingredients.findIndex(ingredient => ingredient.name === ingredientName);
         newFormData.ingredients = newFormData.ingredients.slice(0, index).concat(newFormData.ingredients.slice(index + 1));
         setFormData(newFormData)
     }
@@ -82,18 +83,34 @@ const RecipeEdit = () => {
         console.log(instructionDiv);
         const instructionName = instructionDiv.children[0].value;
         const newFormData = { ...formData };
-        const index = newFormData.instructions.findIndex(instruction => instruction === instructionName)
+        const index = newFormData.instructions.findIndex(instruction => instruction === instructionName);
         newFormData.instructions = newFormData.instructions.slice(0, index).concat(newFormData.instructions.slice(index + 1));
-        setFormData(newFormData)
+        setFormData(newFormData);
     }
-    return (
-        isLoading ? <p>Loading Screen</p> :
-            <section>
-                <form action="" onSubmit={handleSubmit}>
-                    <div className="form-control">
-                        <label htmlFor="name">Recipe Name</label>
-                        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-                    </div>
+    const nextPage = (event)=>{
+        event.preventDefault()
+        setProgress(prev=> prev+1)
+    }
+    const previousPage = (event)=>{
+        event.preventDefault()
+        setProgress(prev=> prev-1)
+    }
+    const currentPage = () => {
+        switch (progress) {
+            case 0:
+                return (
+                    <section>
+                        <div className="form-control">
+                            <label htmlFor="name">Recipe Name</label>
+                            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                        </div>
+                        <div className="formNavigation">
+                            <button onClick={nextPage}>Next</button>                            
+                        </div>
+                    </section>
+                )
+            case 1:
+                return (
                     <section>
                         <h3>Ingredients</h3>
                         <button onClick={addIngredient}>
@@ -105,9 +122,122 @@ const RecipeEdit = () => {
                                 return (
                                     <div className="form-control" key={index}>
                                         <label htmlFor={ingredient.name + `-name`}>Ingredient name</label>
-                                        <input type="text" name={ingredient.name + `-name`} value={ingredient.name}  onChange={handleIngredientChange}/>
+                                        <input type="text" name={ingredient.name + `-name`} value={ingredient.name} onChange={handleIngredientChange} />
                                         <label htmlFor={ingredient.name + `-measurement`}>Quantity</label>
-                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange}/>
+                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange} />
+                                        <label htmlFor={ingredient.name + `-unit`}>Unit</label>
+                                        <select name={ingredient.name + `-unit`} id="" value={ingredient.unit} onChange={handleIngredientChange}>
+                                            <option value="cup">cup</option>
+                                            <option value="gallon">gallon</option>
+                                            <option value="gram">gram</option>
+                                            <option value="litre">litre</option>
+                                            <option value="kilogram">kilogram</option>
+                                            <option value="ounce">ounce</option>
+                                            <option value="quart">quart</option>
+                                            <option value="tbsp">tbsp</option>
+                                        </select>
+                                        <button onClick={removeIngredient}>
+                                            Remove
+                                        </button>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                        <div className="formNavigation">
+                            <button onClick={previousPage}>Previous</button>
+                            <button onClick={nextPage}>Next</button>                            
+                        </div>
+                    </section>
+                )
+            case 2:
+                return (
+                    <section>
+                        <div className="form-control">
+                            <label htmlFor="preparationTime">How long does it take to prepare in hours</label>
+                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} onChange={handleChange} />
+                        </div>
+                        <div className="formNavigation">
+                            <button onClick={previousPage}>Previous</button>
+                            <button onClick={nextPage}>Next</button>                            
+                        </div>
+                    </section>
+                )
+            case 3:
+                return (
+                    <section >
+                        <h3>Instructions</h3>
+                        <button onClick={addInstruciton}>Add instruction</button>
+                        <ol>
+                            {
+                                formData.instructions.map((instruction, index) => {
+                                    return (
+                                        <li key={index} draggable="true">
+                                            <label htmlFor={`instruction-${index}`}>Step {`${index}`}</label>
+                                            <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange}></textarea>
+                                            <button onClick={removeInstructions}>Remove</button>
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ol>
+                        <div className="formNavigation">
+                            <button onClick={previousPage}>Previous</button>
+                            <button onClick={nextPage}>Next</button>                            
+                        </div>
+                    </section>
+                )
+            case 4:
+                return (
+                    <section>
+                        <div className="form-control">
+                            <label htmlFor="image">Show off a picture of your meal</label>
+                            <input type="file" name="image" id="" accept="image/*" value={formData.image} onChange={handleChange} />
+                        </div>
+                        <div className="formNavigation">
+                            <button onClick={previousPage}>Previous</button>
+                            <button onClick={nextPage}>Next</button>                            
+                        </div>
+                    </section>
+                )
+            case 5:
+                return (
+                    <section>
+                        <h1>All set?</h1>
+                        <div className="formNavigation">
+                            <button onClick={previousPage}>Previous</button>
+                            <button type="submit">Submit</button>                          
+                        </div>                    
+                    </section>
+                )
+        }
+    }
+    return (
+
+        isLoading ? <p>Loading Screen</p> :
+
+            <section>
+                <form action="" onSubmit={handleSubmit}>
+                    {currentPage()}
+                    {/* <section>
+                            <div className="form-control">
+                                <label htmlFor="name">Recipe Name</label>
+                                <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                            </div>                        
+                    </section>
+                    <section>
+                        <h3>Ingredients</h3>
+                        <button onClick={addIngredient}>
+                            <p>Add Ingredients</p>
+                            <i className="fa fa-plus-circle" aria-hidden="true"></i>
+                        </button>
+                        <div>
+                            {formData.ingredients.map((ingredient, index) => {
+                                return (
+                                    <div className="form-control" key={index}>
+                                        <label htmlFor={ingredient.name + `-name`}>Ingredient name</label>
+                                        <input type="text" name={ingredient.name + `-name`} value={ingredient.name} onChange={handleIngredientChange} />
+                                        <label htmlFor={ingredient.name + `-measurement`}>Quantity</label>
+                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange} />
                                         <label htmlFor={ingredient.name + `-unit`}>Unit</label>
                                         <select name={ingredient.name + `-unit`} id="" value={ingredient.unit} onChange={handleIngredientChange}>
                                             <option value="cup">cup</option>
@@ -127,12 +257,12 @@ const RecipeEdit = () => {
                             })}
                         </div>
                     </section>
-
-                    <div className="form-control">
-                        <label htmlFor="preparationTime">How long does it take to prepare</label>
-                        <input type="number" name="preparationTime" id="" value={formData.preparationTime} onChange={handleChange} />
-                    </div>
-
+                    <section>
+                        <div className="form-control">
+                            <label htmlFor="preparationTime">How long does it take to prepare in hours</label>
+                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} onChange={handleChange} />
+                        </div>                        
+                    </section>
                     <section >
                         <h3>Instructions</h3>
                         <button onClick={addInstruciton}>Add instruction</button>
@@ -150,13 +280,18 @@ const RecipeEdit = () => {
                             }
                         </ol>
                     </section>
+                    <section>
+                        <div className="form-control">
+                            <label htmlFor="image">Show off a picture of your meal</label>
+                            <input type="file" name="image" id="" accept="image/*" value={formData.image} onChange={handleChange} />
+                        </div>                        
+                    </section>
 
-                    <div className="form-control">
-                        <label htmlFor="image">Show off a picture of your meal</label>
-                        <input type="file" name="image" id="" accept="image/*" value={formData.image} onChange={handleChange} />
-                    </div>
+                    <section>
+                        <label htmlFor="submitButton">All set?</label>
+                        <button type="submit" name="submitButton">Submit</button>
+                    </section> */}
 
-                    <button type="submit">Submit</button>
                 </form>
             </section>
 
