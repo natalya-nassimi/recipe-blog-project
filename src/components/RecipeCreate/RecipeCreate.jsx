@@ -10,13 +10,23 @@ const RecipeCreate = () => {
         image: "",
         instructions: []
     })
+    const [error, setError] = useState("");
     const [progress, setProgress] = useState(0);
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
-        await recipeCreate(formData);
-        navigate(`/recipes`);
+        try {
+            event.preventDefault();
+            await recipeCreate(formData);
+            navigate(`/recipes`);            
+        } catch (error) {
+            if (error.response.status === 500) {
+                setError({ message: 'Something went wrong!' })
+            } else {
+                setError(error.response.data)
+            }            
+        }
+
     }
 
     const handleChange = (event) => {
