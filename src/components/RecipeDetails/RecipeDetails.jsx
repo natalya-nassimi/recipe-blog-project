@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { recipeShow } from "../../services/recipes";
 import { useNavigate, useParams } from "react-router";
+import DeleteRecipe from "../DeleteRecipe/DeleteRecipe";
+import { UserContext } from "../../contexts/UserContext";
 import './RecipeDetails.css'
 
 const RecipeDetails = () => {
@@ -9,6 +11,7 @@ const RecipeDetails = () => {
     const [errorData, setErrorData] = useState({})
     const navigate = useNavigate()
     const { recipeId } = useParams();
+    const { user } = useContext(UserContext)
     useEffect(() => {
         const getRecipe = async () => {
             try {
@@ -24,10 +27,12 @@ const RecipeDetails = () => {
                 } else {
                 setErrorData(error.response.data)
                 }                
+            } finally {
+                setLoading(false)
             }
         }
         getRecipe();
-    }, [])
+    }, [recipeId, navigate])
 
     return (
         loading ? <p className="loading">Loading ...</p> :
@@ -59,6 +64,10 @@ const RecipeDetails = () => {
                                     return <li key={index}>{instruction}</li>
                                 })}
                             </ol>
+                        </section>
+
+                        <section>
+                            {user._id === recipe.author._id && <DeleteRecipe recipeId={recipeId} /> }
                         </section>
                     </div>
                 </div>

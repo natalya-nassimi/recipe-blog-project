@@ -26,3 +26,11 @@ export const recipeEdit = (recipeId, formData)=>{
         }
     });
 }
+
+export const recipeDelete = (recipeId) => {
+    return api.delete(`${recipeId}`, {
+        headers: {
+            Authorization: `Bearer ${getToken()}`
+        }
+    })
+}
