@@ -154,7 +154,7 @@ const RecipeCreate = () => {
                                             <option value="quart">quart</option>
                                             <option value="tbsp">tbsp</option>
                                         </select>
-                                        <button onClick={removeIngredient}>
+                                        <button className='remove-btn'onClick={removeIngredient}>
                                             Remove
                                         </button>
                                     </div>
@@ -191,7 +191,7 @@ const RecipeCreate = () => {
                                     return (
                                         <li key={index} draggable="true">
                                             <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange} required></textarea>
-                                            <button onClick={removeInstructions}>Remove</button>
+                                            <button className='remove-btn' onClick={removeInstructions}>Remove</button>
                                         </li>
                                     )
                                 })
