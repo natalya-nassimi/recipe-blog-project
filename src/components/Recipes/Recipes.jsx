@@ -1,6 +1,7 @@
 import RecipeCard from "./RecipeCard/RecipeCard";
 import { recipeIndex } from "../../services/recipes";
 import { useEffect, useState } from "react";
+import './Recipes.css'
 
 const Recipes = () => {
 
@@ -21,8 +22,7 @@ const Recipes = () => {
 
     return (
         <>
-            <h1>Recipes</h1>
-            <section>
+            <section className="recipes-container">
                 {recipes.length > 0 ? recipes.map(recipe => {
                     return (
                         <RecipeCard key={recipe._id} recipe={recipe} />
