@@ -9,6 +9,7 @@ import RecipeDetails from './components/RecipeDetails/RecipeDetails'
 import RecipeEdit from './components/RecipeEdit/RecipeEdit'
 import SignUp from './components/SignUp/SignUp'
 import SignIn from './components/SignIn/SignIn'
+import RecipeCreate from './components/RecipeCreate/RecipeCreate'
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
         <Route path="/recipes" element={<Recipes/>}></Route>
         <Route path="/recipes/:recipeId" element={<RecipeDetails/>} ></Route>
         <Route path="/recipes/:recipeId/edit" element={<RecipeEdit/>} ></Route>
-        <Route path="/recipes/:recipeId/new" element={<RecipeEdit/>} ></Route>
+        <Route path="/recipes/new" element={<RecipeCreate/>} ></Route>
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
       </Routes>
