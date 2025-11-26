@@ -1,6 +1,7 @@
 import { useState, useContext} from "react";
 import { Navigate, useNavigate } from "react-router";
 import { UserContext } from "../../contexts/UserContext";
+import './RecipeCreate.css'
 
 import { recipeCreate } from "../../services/recipes";
 const RecipeCreate = () => {
@@ -184,7 +185,7 @@ const RecipeCreate = () => {
                     <section >
                         <h3>Instructions</h3>
                         <button onClick={addInstruciton}>Add instruction</button>
-                        <ol>
+                        <ol className='instructions-list'>
                             {
                                 formData.instructions.map((instruction, index) => {
                                     return (
@@ -232,7 +233,7 @@ const RecipeCreate = () => {
     }
 
     return (
-            <section>
+            <section className='recipe-create-container'>
                 <form action="" onSubmit={handleSubmit}>
                     {currentPage()}
                 </form>
