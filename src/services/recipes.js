@@ -21,8 +21,8 @@ export const recipeCreate = (formData)=>{
 }
 export const recipeEdit = (recipeId, formData)=>{
     return api.put(`/${recipeId}`, formData, {
-        // headers: {
-        //     Authorization:
-        // }
+        headers: {
+            Authorization: `Bearer ${getToken()}`
+        }
     });
 }
