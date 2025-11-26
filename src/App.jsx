@@ -10,6 +10,7 @@ import RecipeEdit from './components/RecipeEdit/RecipeEdit'
 import SignUp from './components/SignUp/SignUp'
 import SignIn from './components/SignIn/SignIn'
 import RecipeCreate from './components/RecipeCreate/RecipeCreate'
+import MyRecipes from './components/MyRecipes/MyRecipes'
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/recipes/new" element={<RecipeCreate/>} ></Route>
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/recipes/my-recipes" element={<MyRecipes/>}></Route>
       </Routes>
     </main>
     </>

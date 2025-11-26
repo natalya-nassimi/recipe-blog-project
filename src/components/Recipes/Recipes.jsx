@@ -2,8 +2,9 @@ import RecipeCard from "./RecipeCard/RecipeCard";
 import { recipeIndex } from "../../services/recipes";
 import { useEffect, useState } from "react";
 import './Recipes.css'
+import { UserProvider } from "../../contexts/UserContext";
 
-const Recipes = () => {
+const Recipes = ({ filterByUser, userId }) => {
 
     // ? Hooks
 
@@ -12,13 +13,18 @@ const Recipes = () => {
         const getRecipes = async () => {
             try {
                 const { data } = await recipeIndex();
-                setRecipe(data);
+                
+                const filteredRecipes = filterByUser && userId
+                ? data.filter(recipe => recipe.author?._id === userId)
+                : data;
+
+                setRecipe(filteredRecipes);
             } catch (error) {
 
             }
         }
         getRecipes();
-    }, []);
+    }, [filterByUser, userId]);
 
     return (
         <>
