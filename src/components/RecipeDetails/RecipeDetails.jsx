@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { recipeShow } from "../../services/recipes";
 import { useNavigate, useParams } from "react-router";
-import { useParams } from "react-router";
 import './RecipeDetails.css'
 
 const RecipeDetails = () => {
@@ -44,10 +43,10 @@ const RecipeDetails = () => {
                     <div className='details-grid'>
                         <section className='ingredients-card'>
                             <h2>Ingredients</h2>
-                            {recipe.ingredients.map(ingredient => {
+                            {recipe.ingredients.map((ingredient, index) => {
                                 return (
-                                    <div>
-                                        <p>{ingredient.measurement + ` ${ingredient.measurement > 1 ? ingredient.unit + `s` : ingredient.unit}` + ` of ${ingredient.name}`} </p>
+                                    <div key={index} >
+                                        <p> {ingredient.measurement + ` ${ingredient.measurement > 1 ? ingredient.unit + `s` : ingredient.unit}` + ` of ${ingredient.name}`} </p>
                                     </div>
                                 )
                             })}
