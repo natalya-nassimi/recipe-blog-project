@@ -28,11 +28,11 @@ const RecipeDetails = () => {
                         <h1>{recipe.name}</h1>
                         <p className='author'> {recipe.author?.username}</p>
                         <p className='date'> {recipe?.createdAt.split("T")[0]}</p>
-                        <p className='prep-time'> {recipe.preparationTime}</p>
+                        <p className='prep-time'> Preparation time: {recipe.preparationTime} hours </p>
                     </section>
 
                     <div className='details-grid'>
-                        <section className='ingredients'>
+                        <section className='ingredients-card'>
                             <h2>Ingredients</h2>
                             {recipe.ingredients.map(ingredient => {
                                 return (
@@ -43,7 +43,7 @@ const RecipeDetails = () => {
                             })}
                         </section>
 
-                        <section className="instrutions-card">
+                        <section className="instructions-card">
                             <h2>Instructions</h2>
                             <ol>
                                 {recipe.instructions.map((instruction, index) => {
