@@ -1,8 +1,10 @@
 import RecipeCard from "./RecipeCard/RecipeCard";
 import { recipeIndex } from "../../services/recipes";
 import { useEffect, useState } from "react";
+import './Recipes.css'
+import { UserProvider } from "../../contexts/UserContext";
 
-const Recipes = () => {
+const Recipes = ({ filterByUser, userId }) => {
 
     // ? Hooks
 
@@ -12,19 +14,23 @@ const Recipes = () => {
         const getRecipes = async () => {
             try {
                 const { data } = await recipeIndex();
-                setRecipe(data);
+                
+                const filteredRecipes = filterByUser && userId
+                ? data.filter(recipe => recipe.author?._id === userId)
+                : data;
+
+                setRecipe(filteredRecipes);
             } catch (error) {
                 console.log(error)
                 setErrorData(error.response.data)
             }
         }
         getRecipes();
-    }, []);
+    }, [filterByUser, userId]);
 
     return (
         <>
-            <h1>Recipes</h1>
-            <section>
+            <section className="recipes-container">
                 {recipes.length > 0 ? recipes.map(recipe => {
                     return (
                         <RecipeCard key={recipe._id} recipe={recipe} />

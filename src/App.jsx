@@ -11,6 +11,8 @@ import SignUp from './components/SignUp/SignUp'
 import SignIn from './components/SignIn/SignIn'
 import RecipeCreate from './components/RecipeCreate/RecipeCreate'
 import NotFound from './components/NotFound/NotFound'
+import MyRecipes from './components/MyRecipes/MyRecipes'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -28,6 +30,7 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="*" element={<NotFound />} />        
+        <Route path="/recipes/my-recipes" element={<MyRecipes/>}></Route>
       </Routes>
     </main>
     </>

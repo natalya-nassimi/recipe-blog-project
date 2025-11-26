@@ -1,4 +1,7 @@
+import './RecipeCard.css'
 import { useNavigate } from "react-router";
+import defaultImage from '../../../assets/default-image.png'
+
 const RecipeCard = ({recipe})=>{
 
     // ? Hooks
@@ -6,19 +9,20 @@ const RecipeCard = ({recipe})=>{
 
     // ? handler functions
 
-    const handleClick = (event) => {
+    const handleClick = () => {
         navigate(`/recipes/${recipe._id}`)
     }
     return(
-        <div onClick={handleClick} >
+        <div className='recipe-card' onClick={handleClick} >
             {/*image div */}
             <div>
-                <img src={recipe.image} alt="" />
+                <img className='recipe-card-image' src={recipe.image || defaultImage} alt={recipe.name} />
             </div>
             {/*text card div */}
-            <div>
-                <p>{recipe.name}</p>
-                <p>{recipe.preparationTime}</p>
+            <div className='recipe-card-content'>
+                <p className='recipe-name'> {recipe.name}</p>
+                <p className='prep-time'>Preparation Time: {recipe.preparationTime}</p>
+                <p className='author'>Posted By: {recipe.author.username}</p>
             </div>
         </div>
     )
