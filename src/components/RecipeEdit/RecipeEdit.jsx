@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-
+import { useContext, useEffect, useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import { UserContext } from "../../contexts/UserContext"
 import { recipeShow } from "../../services/recipes";
 import { recipeEdit } from "../../services/recipes";
 const RecipeEdit = () => {
+    const {user} = useContext(UserContext);
     const [recipe, setRecipe] = useState({});
     const [formData, setFormData] = useState({
         name: "",
@@ -13,10 +15,11 @@ const RecipeEdit = () => {
         instructions: []
     })
     const [progress, setProgress] = useState(0);
-    const [error, setError] = useState("");
+    const [error, setErrorData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const { recipeId } = useParams();
     const navigate = useNavigate();
+    
     useEffect(() => {
         const getFormData = async () => {
             try {
@@ -24,28 +27,35 @@ const RecipeEdit = () => {
                 if(data.preparationTime ===null){
                     data.preparationTime = "";
                 }
-                setFormData(data)
-                setIsLoading(false)
+                setFormData(data);
             } catch (error) {
-                 if (error.response.status === 500) {
-                    setError({ message: 'Something went wrong!' })
-                } else {
-                    setError(error.response.data)
+                const {status, data} = error.response;
+                 if (status === 500) {
+                    setErrorData({ message: 'Something went wrong. Please try again.' });
+                } else if(status ===404){
+                    navigate('/page-not-found');
+                }else {
+                    setErrorData(data)
                 }
+            }finally{
+                setIsLoading(false)
             }
         }
         getFormData();
-    }, [])
+    }, [recipeId, navigate])
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
             await recipeEdit(recipeId, formData);
+            // toast("Successfully edited recipe")
             navigate(`/recipes/${recipeId}`);            
         } catch (error) {
             if (error.response.status === 500) {
-                setError({ message: 'Something went wrong!' })
+                setErrorData({ message: 'Something went wrong!' });
+                toast("Something went wrong")
             } else {
-                setError(error.response.data)
+                setErrorData(error.response.data);
+                toast(error.response.data)
             }
         }
 
@@ -109,6 +119,10 @@ const RecipeEdit = () => {
             case 1:
                 return formData.ingredients.some(ingredient=> ingredient.name.trim()== "" || ingredient.measurement=="" || ingredient.unit =="");
             case 2:
+                if(formData.preparationTime< 1){
+                    setErrorData("")
+                    return true
+                }
                 return false;
             case 3:
                 return formData.instructions.some(ingredient=> ingredient.trim()== "" )
@@ -241,6 +255,11 @@ const RecipeEdit = () => {
                 )
         }
     }
+    if (!user) {
+        return <Navigate to="/sign-in" />
+    }    
+    toast(error)
+    
     return (
 
         isLoading ? <p>Loading Screen</p> :
@@ -248,6 +267,7 @@ const RecipeEdit = () => {
             <section>
                 <form action="" onSubmit={handleSubmit}>
                     {currentPage()}
+                    {error?<ToastContainer/>: null}
                 </form>
             </section>
 
