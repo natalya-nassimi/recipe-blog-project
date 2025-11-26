@@ -76,15 +76,30 @@ const RecipeCreate = () => {
     const removeInstructions = (event) => {
         event.preventDefault();
         const instructionDiv = event.target.parentElement;
-        const instructionName = instructionDiv.children[0].value;
+        const index = parseInt(instructionDiv.children[1].name.split("-")[1]);
         const newFormData = { ...formData };
-        const index = newFormData.instructions.findIndex(instruction => instruction === instructionName);
         newFormData.instructions = newFormData.instructions.slice(0, index).concat(newFormData.instructions.slice(index + 1));
         setFormData(newFormData);
     }
+    const validatePage = ()=>{
+        switch (progress){
+            case 0:
+                return formData.name.trim() === "" ? true :false ; 
+            case 1:
+                return formData.ingredients.some(ingredient=> ingredient.name.trim()== "" || ingredient.measurement=="" || ingredient.unit =="");
+            case 2:
+                return false;
+            case 3:
+                return formData.instructions.some(ingredient=> ingredient.trim()== "" )
+            case 4:
+                return false
+        }
+    }
     const nextPage = (event)=>{
         event.preventDefault()
-        setProgress(prev=> prev+1)
+        if(!validatePage()){
+            setProgress(prev=> prev+1)            
+        }
     }
     const previousPage = (event)=>{
         event.preventDefault()
@@ -100,7 +115,7 @@ const RecipeCreate = () => {
                             <input type="text" name="name" value={formData.name} onChange={handleChange} required />
                         </div>
                         <div className="formNavigation">
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
                         </div>
                     </section>
                 )
@@ -117,11 +132,12 @@ const RecipeCreate = () => {
                                 return (
                                     <div className="form-control" key={index}>
                                         <label htmlFor={ingredient.name + `-name`}>Ingredient name</label>
-                                        <input type="text" name={ingredient.name + `-name`} value={ingredient.name} onChange={handleIngredientChange} />
+                                        <input type="text" name={ingredient.name + `-name`} value={ingredient.name} onChange={handleIngredientChange} required/>
                                         <label htmlFor={ingredient.name + `-measurement`}>Quantity</label>
-                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange} />
+                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange} min="0" required />
                                         <label htmlFor={ingredient.name + `-unit`}>Unit</label>
-                                        <select name={ingredient.name + `-unit`} id="" value={ingredient.unit} onChange={handleIngredientChange}>
+                                        <select name={ingredient.name + `-unit`} id="" value={ingredient.unit} onChange={handleIngredientChange} required>
+                                            <option value="">Choose a unit type</option>
                                             <option value="cup">cup</option>
                                             <option value="gallon">gallon</option>
                                             <option value="gram">gram</option>
@@ -140,7 +156,7 @@ const RecipeCreate = () => {
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
                         </div>
                     </section>
                 )
@@ -153,7 +169,7 @@ const RecipeCreate = () => {
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
                         </div>
                     </section>
                 )
@@ -168,7 +184,7 @@ const RecipeCreate = () => {
                                     return (
                                         <li key={index} draggable="true">
                                             <label htmlFor={`instruction-${index}`}>Step {`${index+1}`}</label>
-                                            <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange}></textarea>
+                                            <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange} required></textarea>
                                             <button onClick={removeInstructions}>Remove</button>
                                         </li>
                                     )
@@ -177,7 +193,7 @@ const RecipeCreate = () => {
                         </ol>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
                         </div>
                     </section>
                 )
@@ -190,7 +206,7 @@ const RecipeCreate = () => {
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
                         </div>
                     </section>
                 )
