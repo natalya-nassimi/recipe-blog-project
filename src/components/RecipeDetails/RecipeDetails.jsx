@@ -67,7 +67,14 @@ const RecipeDetails = () => {
                         </section>
 
                         <section>
-                            {user._id === recipe.author._id && <DeleteRecipe recipeId={recipeId} /> }
+                            {user._id === recipe.author._id && (
+                                <div className='user-actions'>
+                                    <button className='edit-btn' onClick={() => navigate(`/recipes/${recipeId}/edit`)}>
+                                        Edit Recipe
+                                    </button>
+                                <DeleteRecipe recipeId={recipeId} />
+                                </div>
+                            )}
                         </section>
                     </div>
                 </div>
