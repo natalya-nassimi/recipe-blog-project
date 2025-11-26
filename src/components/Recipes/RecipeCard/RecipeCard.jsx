@@ -21,7 +21,7 @@ const RecipeCard = ({recipe})=>{
             {/*text card div */}
             <div className='recipe-card-content'>
                 <p className='recipe-name'> {recipe.name}</p>
-                <p className='prep-time'>Preparation Time: {recipe.preparationTime}</p>
+                <p className='prep-time'>Preparation Time: {recipe.preparationTime} hours </p>
                 <p className='author'>Posted By: {recipe.author.username}</p>
             </div>
         </div>
