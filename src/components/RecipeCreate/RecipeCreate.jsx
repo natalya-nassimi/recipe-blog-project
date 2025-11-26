@@ -7,7 +7,7 @@ const RecipeCreate = () => {
         name: "",
         ingredients: [],
         preparationTime: "",
-        image: "",
+        image: null,
         instructions: []
     })
     const [error, setError] = useState("");

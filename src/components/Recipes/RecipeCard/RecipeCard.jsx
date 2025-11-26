@@ -7,7 +7,6 @@ const RecipeCard = ({recipe})=>{
     // ? handler functions
 
     const handleClick = (event) => {
-        console.log(recipe._id);
         navigate(`/recipes/${recipe._id}`)
     }
     return(

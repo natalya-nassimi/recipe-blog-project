@@ -27,9 +27,9 @@ const RecipeDetails = () => {
                     <p>{recipe.preparationTime}</p>
                 </section>
                 <section >
-                    {recipe.ingredients.map(ingredient=>{
+                    {recipe.ingredients.map((ingredient, index)=>{
                         return(
-                        <div>
+                        <div key={index}>
                             <p>{ingredient.measurement +` ${ingredient.measurement>1?ingredient.unit+`s`: ingredient.unit}` + ` of ${ingredient.name}`} </p>
                         </div>
                         )
