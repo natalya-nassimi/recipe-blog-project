@@ -55,14 +55,11 @@ const RecipeEdit = ()=>{
         setFormData(newInstruction);        
     }
     const removeIngredient =  (event)=>{
-        console.log(event.target.parentElement);
         const ingredientDiv =event.target.parentElement ;
-        console.log(ingredientDiv.children)
     }
     const dragStart = ()=>{
 
     }
-    console.log(formData)
     return (
         isLoading?<p>Loading Screen</p>:
         <section>

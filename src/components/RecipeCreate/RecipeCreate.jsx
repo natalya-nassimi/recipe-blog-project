@@ -53,7 +53,7 @@ const RecipeCreate = () => {
         const newFormData = { ...formData };
         newFormData.ingredients.push({
             name: "",
-            measuerment: "",
+            measurement: "",
             unit: "",
         })
         setFormData(newFormData);
@@ -76,7 +76,6 @@ const RecipeCreate = () => {
     const removeInstructions = (event) => {
         event.preventDefault();
         const instructionDiv = event.target.parentElement;
-        console.log(instructionDiv);
         const instructionName = instructionDiv.children[0].value;
         const newFormData = { ...formData };
         const index = newFormData.instructions.findIndex(instruction => instruction === instructionName);
