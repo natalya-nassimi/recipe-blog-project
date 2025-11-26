@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-
+import { useContext, useEffect, useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import { UserContext } from "../../contexts/UserContext"
 import { recipeShow } from "../../services/recipes";
 import { recipeEdit } from "../../services/recipes";
 const RecipeEdit = () => {
+    const {user} = useContext(UserContext);
     const [recipe, setRecipe] = useState({});
     const [formData, setFormData] = useState({
         name: "",
@@ -13,35 +15,47 @@ const RecipeEdit = () => {
         instructions: []
     })
     const [progress, setProgress] = useState(0);
+    const [errorData, setErrorData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const { recipeId } = useParams();
     const navigate = useNavigate();
+    
     useEffect(() => {
         const getFormData = async () => {
             try {
                 const { data } = await recipeShow(recipeId);
-                setFormData(data)
-                setIsLoading(false)
-            } catch (error) {
-                 if (error.response.status === 500) {
-                    setError({ message: 'Something went wrong!' })
-                } else {
-                    setError(error.response.data)
+
+                if(data.preparationTime ===null){
+                    data.preparationTime = "";
                 }
+                setFormData(data);
+            } catch (error) {
+                
+                const {status, data} = error.response;
+                 if (status === 500) {
+                    setErrorData({ message: 'Something went wrong. Please try again.' });
+                } else if(status ===404){
+                    navigate('/page-not-found');
+                }else {
+                    setErrorData(data)
+                }
+            }finally{
+                setIsLoading(false)
             }
         }
         getFormData();
-    }, [])
+    }, [recipeId, navigate])
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
             await recipeEdit(recipeId, formData);
+            // toast("Successfully edited recipe")
             navigate(`/recipes/${recipeId}`);            
         } catch (error) {
             if (error.response.status === 500) {
-                setError({ message: 'Something went wrong!' })
+                setErrorData({ message: 'Something went wrong!' });
             } else {
-                setError(error.response.data)
+                setErrorData(error.response.data);
             }
         }
 
@@ -93,15 +107,38 @@ const RecipeEdit = () => {
     const removeInstructions = (event) => {
         event.preventDefault();
         const instructionDiv = event.target.parentElement;
-        const instructionName = instructionDiv.children[0].value;
+        const index = parseInt(instructionDiv.children[0].name.split("-")[1]);
+        console.log(index)
         const newFormData = { ...formData };
-        const index = newFormData.instructions.findIndex(instruction => instruction === instructionName);
         newFormData.instructions = newFormData.instructions.slice(0, index).concat(newFormData.instructions.slice(index + 1));
         setFormData(newFormData);
     }
+    const validatePage = ()=>{
+        switch (progress){
+            case 0:
+                return formData.name.trim() === "" ? true :false ; 
+            case 1:
+                return formData.ingredients.some(ingredient=> ingredient.name.trim()== "" || ingredient.measurement=="" || ingredient.unit =="");
+            case 2:
+                // if(formData.preparationTime< 1){
+                //     // setErrorData({})
+                //     return true
+                // }
+                return false;
+            case 3:
+                if(formData.instructions.length<1){
+                    return true
+                }
+                return formData.instructions.some(ingredient=> ingredient.trim()== "" )
+            case 4:
+                return false
+        }
+    }
     const nextPage = (event)=>{
         event.preventDefault()
-        setProgress(prev=> prev+1)
+        if(!validatePage()){
+            setProgress(prev=> prev+1)            
+        }
     }
     const previousPage = (event)=>{
         event.preventDefault()
@@ -117,7 +154,7 @@ const RecipeEdit = () => {
                             <input type="text" name="name" value={formData.name} onChange={handleChange} required />
                         </div>
                         <div className="formNavigation">
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                                
                         </div>
                     </section>
                 )
@@ -136,9 +173,10 @@ const RecipeEdit = () => {
                                         <label htmlFor={ingredient.name + `-name`}>Ingredient name</label>
                                         <input type="text" name={ingredient.name + `-name`} value={ingredient.name} onChange={handleIngredientChange} />
                                         <label htmlFor={ingredient.name + `-measurement`}>Quantity</label>
-                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange} />
+                                        <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} min="0" onChange={handleIngredientChange} />
                                         <label htmlFor={ingredient.name + `-unit`}>Unit</label>
                                         <select name={ingredient.name + `-unit`} id="" value={ingredient.unit} onChange={handleIngredientChange}>
+                                            <option value="">Choose a unit type</option>
                                             <option value="cup">cup</option>
                                             <option value="gallon">gallon</option>
                                             <option value="gram">gram</option>
@@ -157,7 +195,7 @@ const RecipeEdit = () => {
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                               
                         </div>
                     </section>
                 )
@@ -166,11 +204,11 @@ const RecipeEdit = () => {
                     <section>
                         <div className="form-control">
                             <label htmlFor="preparationTime">How long does it take to prepare in hours</label>
-                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} onChange={handleChange} />
+                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} min="0" onChange={handleChange} />
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                               
                         </div>
                     </section>
                 )
@@ -184,7 +222,6 @@ const RecipeEdit = () => {
                                 formData.instructions.map((instruction, index) => {
                                     return (
                                         <li key={index} draggable="true">
-                                            <label htmlFor={`instruction-${index}`}>Step {`${index}`}</label>
                                             <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange}></textarea>
                                             <button onClick={removeInstructions}>Remove</button>
                                         </li>
@@ -194,7 +231,7 @@ const RecipeEdit = () => {
                         </ol>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                                
                         </div>
                     </section>
                 )
@@ -207,7 +244,7 @@ const RecipeEdit = () => {
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                               
                         </div>
                     </section>
                 )
@@ -223,6 +260,11 @@ const RecipeEdit = () => {
                 )
         }
     }
+    if (!user) {
+        return <Navigate to="/sign-in" />
+    }    
+    // toast("")
+    
     return (
 
         isLoading ? <p>Loading Screen</p> :
@@ -230,6 +272,7 @@ const RecipeEdit = () => {
             <section>
                 <form action="" onSubmit={handleSubmit}>
                     {currentPage()}
+                    {errorData?<ToastContainer/>: null}
                 </form>
             </section>
 

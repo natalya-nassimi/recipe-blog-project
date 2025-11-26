@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { recipeShow } from "../../services/recipes";
+import { useNavigate, useParams } from "react-router";
 import { useParams } from "react-router";
 import './RecipeDetails.css'
 
 const RecipeDetails = () => {
     const [recipe, setRecipe] = useState({})
     const [loading, setLoading] = useState(true);
+    const [errorData, setErrorData] = useState({})
+    const navigate = useNavigate()
     const { recipeId } = useParams();
     useEffect(() => {
         const getRecipe = async () => {
@@ -14,7 +17,14 @@ const RecipeDetails = () => {
                 setLoading(false)
                 setRecipe(data);
             } catch (error) {
-
+                console.log(error)
+                if (error.response.status === 500) {
+                setErrorData({ message: 'Something went wrong. Please try again' })
+                } else if (error.response.status === 404) {
+                navigate('/page-not-found')
+                } else {
+                setErrorData(error.response.data)
+                }                
             }
         }
         getRecipe();

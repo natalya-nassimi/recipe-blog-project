@@ -9,6 +9,7 @@ const Recipes = ({ filterByUser, userId }) => {
     // ? Hooks
 
     const [recipes, setRecipe] = useState([]);
+    const [errorData, setErrorData] = useState({})
     useEffect(() => {
         const getRecipes = async () => {
             try {
@@ -20,7 +21,8 @@ const Recipes = ({ filterByUser, userId }) => {
 
                 setRecipe(filteredRecipes);
             } catch (error) {
-
+                console.log(error)
+                setErrorData(error.response.data)
             }
         }
         getRecipes();
