@@ -23,7 +23,7 @@ const DeleteRecipe = ({ recipeId }) => {
 
     return (
         <>
-            <button onClick={handleDelete}>Delete Recipe</button>
+            <button className='delete-btn' onClick={handleDelete}>Delete Recipe</button>
             {error.message && <p className='error-message'>{error.message}</p>}
         </>
     )
