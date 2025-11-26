@@ -21,6 +21,9 @@ const RecipeEdit = () => {
         const getFormData = async () => {
             try {
                 const { data } = await recipeShow(recipeId);
+                if(data.preparationTime ===null){
+                    data.preparationTime = "";
+                }
                 setFormData(data)
                 setIsLoading(false)
             } catch (error) {
@@ -94,15 +97,30 @@ const RecipeEdit = () => {
     const removeInstructions = (event) => {
         event.preventDefault();
         const instructionDiv = event.target.parentElement;
-        const instructionName = instructionDiv.children[0].value;
+        const index = parseInt(instructionDiv.children[1].name.split("-")[1]);
         const newFormData = { ...formData };
-        const index = newFormData.instructions.findIndex(instruction => instruction === instructionName);
         newFormData.instructions = newFormData.instructions.slice(0, index).concat(newFormData.instructions.slice(index + 1));
         setFormData(newFormData);
     }
+    const validatePage = ()=>{
+        switch (progress){
+            case 0:
+                return formData.name.trim() === "" ? true :false ; 
+            case 1:
+                return formData.ingredients.some(ingredient=> ingredient.name.trim()== "" || ingredient.measurement=="" || ingredient.unit =="");
+            case 2:
+                return false;
+            case 3:
+                return formData.instructions.some(ingredient=> ingredient.trim()== "" )
+            case 4:
+                return false
+        }
+    }
     const nextPage = (event)=>{
         event.preventDefault()
-        setProgress(prev=> prev+1)
+        if(!validatePage()){
+            setProgress(prev=> prev+1)            
+        }
     }
     const previousPage = (event)=>{
         event.preventDefault()
@@ -118,7 +136,7 @@ const RecipeEdit = () => {
                             <input type="text" name="name" value={formData.name} onChange={handleChange} required />
                         </div>
                         <div className="formNavigation">
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                                
                         </div>
                     </section>
                 )
@@ -158,7 +176,7 @@ const RecipeEdit = () => {
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                               
                         </div>
                     </section>
                 )
@@ -167,11 +185,11 @@ const RecipeEdit = () => {
                     <section>
                         <div className="form-control">
                             <label htmlFor="preparationTime">How long does it take to prepare in hours</label>
-                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} onChange={handleChange} />
+                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} min="0" onChange={handleChange} />
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                               
                         </div>
                     </section>
                 )
@@ -185,7 +203,6 @@ const RecipeEdit = () => {
                                 formData.instructions.map((instruction, index) => {
                                     return (
                                         <li key={index} draggable="true">
-                                            <label htmlFor={`instruction-${index}`}>Step {`${index}`}</label>
                                             <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange}></textarea>
                                             <button onClick={removeInstructions}>Remove</button>
                                         </li>
@@ -195,7 +212,7 @@ const RecipeEdit = () => {
                         </ol>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                                
                         </div>
                     </section>
                 )
@@ -208,7 +225,7 @@ const RecipeEdit = () => {
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                               
                         </div>
                     </section>
                 )

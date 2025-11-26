@@ -24,7 +24,7 @@ const RecipeDetails = () => {
                     <h1>{recipe.name}</h1>
                     <p>{recipe.author?.username}</p>
                     <p>{recipe?.createdAt.split("T")[0]}</p>
-                    <p>{recipe.preparationTime}</p>
+                    {recipe.preparationTime?<p>{recipe.preparationTime} hours</p>:<p>No duration set</p>}
                 </section>
                 <section >
                     {recipe.ingredients.map((ingredient, index)=>{
