@@ -1,4 +1,5 @@
 import axios from "axios"
+import { getToken } from "../utils/token";
 const api = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL}/recipes`
 });
@@ -14,8 +15,8 @@ export const recipeShow = (recipeId)=>{
 
 export const recipeEdit = (recipeId, formData)=>{
     return api.put(`/${recipeId}`, formData, {
-        // headers: {
-        //     Authorization:
-        // }
+        headers: {
+            Authorization: `Bearer ${getToken()}`
+        }
     });
 }
