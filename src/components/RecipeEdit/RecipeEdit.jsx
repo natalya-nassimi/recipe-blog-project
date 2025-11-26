@@ -13,6 +13,7 @@ const RecipeEdit = () => {
         instructions: []
     })
     const [progress, setProgress] = useState(0);
+    const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const { recipeId } = useParams();
     const navigate = useNavigate();
