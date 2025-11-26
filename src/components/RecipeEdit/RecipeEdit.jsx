@@ -45,42 +45,47 @@ const RecipeEdit = () => {
         newFormData.ingredients[positionIdx][field] = event.target.value;
         setFormData(newFormData)
     }
+    const handleInstructionChange = (event)=>{
+        const idx =parseInt(event.target.name.split("-")[1]);
+        const newFormData = {...formData};
+        newFormData.instructions[idx] = event.target.value;
+        setFormData(newFormData)
+    }
     const addIngredient = (event) => {
         event.preventDefault();
-        const newIngredient = { ...formData };
-        newIngredient.ingredients.push({
+        const newFormData = { ...formData };
+        newFormData.ingredients.push({
             name: "",
             measuerment: "",
             unit: "",
         })
-        setFormData(newIngredient);
+        setFormData(newFormData);
     }
     const addInstruciton = (event) => {
         event.preventDefault();
-        const newInstruction = { ...formData };
-        newInstruction.instructions.push("")
-        setFormData(newInstruction);
+        const newFormData = { ...formData };
+        newFormData.instructions.push("")
+        setFormData(newFormData);
     }
     const removeIngredient = (event) => {
         event.preventDefault();
         const ingredientDiv = event.target.parentElement;
         const ingredientName = ingredientDiv.children[1].value;
-        const removeIngredient = { ...formData };
-        const index = removeIngredient.ingredients.findIndex(ingredient => ingredient.name === ingredientName)
-        removeIngredient.ingredients = removeIngredient.ingredients.slice(0, index).concat(removeIngredient.ingredients.slice(index + 1));
-        setFormData(removeIngredient)
+        const newFormData = { ...formData };
+        const index = newFormData.ingredients.findIndex(ingredient => ingredient.name === ingredientName)
+        newFormData.ingredients = newFormData.ingredients.slice(0, index).concat(newFormData.ingredients.slice(index + 1));
+        setFormData(newFormData)
     }
     const removeInstructions = (event) => {
         event.preventDefault();
         const instructionDiv = event.target.parentElement;
         console.log(instructionDiv);
         const instructionName = instructionDiv.children[0].value;
-        const removeInstruction = { ...formData };
-        const index = removeInstruction.instructions.findIndex(instruction => instruction === instructionName)
-        removeInstruction.instructions = removeInstruction.instructions.slice(0, index).concat(removeInstruction.instructions.slice(index + 1));
-        setFormData(removeInstruction)
+        const newFormData = { ...formData };
+        const index = newFormData.instructions.findIndex(instruction => instruction === instructionName)
+        newFormData.instructions = newFormData.instructions.slice(0, index).concat(newFormData.instructions.slice(index + 1));
+        setFormData(newFormData)
     }
-    console.log(formData)
     return (
         isLoading ? <p>Loading Screen</p> :
             <section>
@@ -136,7 +141,8 @@ const RecipeEdit = () => {
                                 formData.instructions.map((instruction, index) => {
                                     return (
                                         <li key={index} draggable="true">
-                                            <textarea value={instruction}></textarea>
+                                            <label htmlFor={`instruction-${index}`}>Step {`${index}`}</label>
+                                            <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange}></textarea>
                                             <button onClick={removeInstructions}>Remove</button>
                                         </li>
                                     )
