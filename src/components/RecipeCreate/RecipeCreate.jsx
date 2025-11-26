@@ -1,7 +1,7 @@
-import { useState, useContext} from "react";
+import { useState, useContext } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { UserContext } from "../../contexts/UserContext";
-
+import { ToastContainer, toast } from "react-toastify";
 import { recipeCreate } from "../../services/recipes";
 const RecipeCreate = () => {
     const { user } = useContext(UserContext)
@@ -20,14 +20,16 @@ const RecipeCreate = () => {
         event.preventDefault();
         try {
 
-            const {data} = await recipeCreate(formData);
-            navigate(`/recipes/${data._id}`);            
+            await recipeCreate(formData);
+            navigate(`/recipes/${data._id}`);
         } catch (error) {
+            console.log(error)
             if (error.response.status === 500) {
                 return setErrorData({ message: 'Something went wrong!' })
             } else {
                 setErrorData(error.response.data)
-            }            
+            }
+
         }
 
     }
@@ -84,32 +86,102 @@ const RecipeCreate = () => {
         newFormData.instructions = newFormData.instructions.slice(0, index).concat(newFormData.instructions.slice(index + 1));
         setFormData(newFormData);
     }
-    const validatePage = ()=>{
-        switch (progress){
+    const validatePage = () => {
+        switch (progress) {
             case 0:
-                return formData.name.trim() === "" ? true :false ; 
+                if (formData.name.trim() === "") {
+                    setErrorData(prev => ({ ...prev, ["message"]: 'No recipe name was input. Please add recipe name' }));
+                    toast('No recipe name was input. Please add recipe name')
+                    return true;
+                } else {
+                    return false;
+                }
             case 1:
-                return formData.ingredients.some(ingredient=> ingredient.name.trim()== "" || ingredient.measurement=="" || ingredient.unit =="");
+                // const checkIngredients = function (ingredient, index) {
+
+                //     if (ingredient.name.trim() == "") {
+                //         setErrorData(prev => ({ ...prev, ["message"]: `${index}-No ingredient name was input. Please add ingredient name` }));
+                //         toast(`No ingredient name was input in ingredient ${index + 1}. Please add ingredient name`)
+                //         return true;
+                //     }
+                //     if (ingredient.measurement == "") {
+                //         setErrorData(prev => ({ ...prev, ["message"]: `${index}-No ingredient quantity was input. Please add ingredient quantity` }));
+                //         toast(`No ingredient quantity was input in ingredient ${index + 1}. Please add ingredient quantity`)
+                //         return true;
+                //     }
+                //     if (ingredient.unit == "") {
+                //         setErrorData(prev => ({ ...prev, ["message"]: `${index}-No ingredient unit was selected. Please add ingredient unit` }));
+                //         toast(`No ingredient unit was selected in ingredient ${index + 1}. Please add ingredient unit`)
+                //         return true;
+                //     }
+                // }
+                const ingredientErrors = formData.ingredients.reduce((accumulator, ingredient, index) => {
+                    if (ingredient.name.trim() == "") {
+                        accumulator.push(`${index}-No ingredient name was input. Please add ingredient name`);
+                    }
+                    if (ingredient.measurement == "") {
+                        accumulator.push(`${index}-No ingredient quantity was input. Please add ingredient quantity`);
+                    }
+                    if (ingredient.unit == "") {
+                        accumulator.push(`${index}-No ingredient unit was selected. Please add ingredient unit`);
+                    }
+                    return accumulator
+                }, [])
+                console.log(ingredientErrors)
+                if (ingredientErrors.length == 0) {
+                    return false;
+                } else if (ingredientErrors.length == 1) {
+                    setErrorData(prev => ({ ...prev, ["message"]: ingredientErrors }))
+                    toast(ingredientErrors[0].split("-")[1])
+                    return true
+                } else {
+                    setErrorData(prev => ({ ...prev, ["message"]: ingredientErrors }))
+                    toast(`You have ${ingredientErrors.length} errors on this page`);
+                    return true;
+                }
+            // return formData.ingredients.some((ingredient, index) => checkIngredients(ingredient, index));
             case 2:
                 return false;
             case 3:
-                if(formData.instructions.length<1){
+                if (formData.instructions.length < 1) {
                     return true
                 }
-                return formData.instructions.some(ingredient=> ingredient.trim()== "" )
+                return formData.instructions.some(ingredient => ingredient.trim() == "")
             case 4:
                 return false
         }
     }
-    const nextPage = (event)=>{
+    const nextPage = (event) => {
         event.preventDefault()
-        if(!validatePage()){
-            setProgress(prev=> prev+1)            
+        if (!validatePage()) {
+            const newErrorData = { ...errorData }
+            delete newErrorData.message
+            setErrorData(newErrorData)
+            setProgress(prev => prev + 1)
         }
     }
-    const previousPage = (event)=>{
+    const previousPage = (event) => {
         event.preventDefault()
-        setProgress(prev=> prev-1)
+        setProgress(prev => prev - 1)
+    }
+    const handleIngredientError = (index, field) => {
+        if (errorData.message && errorData.message.constructor === Array) {
+            let output = null;
+            errorData.message.some(errorMessage =>{
+                const [ingredientPos, errorBody] = errorMessage.split("-");
+                const position = parseInt(ingredientPos);
+                const errorType = errorBody.split(" ").pop()
+                // console.log("poistion", position, "field", errorType);
+                console.log("position match",position == index )
+                console.log("field match",field ==errorType)
+                if(position == index && field ==errorType){
+                    output =<p className='error-message'>{errorBody}</p>
+                    return true;
+                }
+            });
+            return output;
+        }
+        return null;
     }
     const currentPage = () => {
         switch (progress) {
@@ -119,9 +191,10 @@ const RecipeCreate = () => {
                         <div className="form-control">
                             <label htmlFor="name">Recipe Name</label>
                             <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                            {errorData.name && <p className='error-message'>{errorData.name}</p>}
                         </div>
                         <div className="formNavigation">
-                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
+                            <button onClick={nextPage} >Next</button>
                         </div>
                     </section>
                 )
@@ -138,9 +211,11 @@ const RecipeCreate = () => {
                                 return (
                                     <div className="form-control" key={index}>
                                         <label htmlFor={ingredient.name + `-name`}>Ingredient name</label>
-                                        <input type="text" name={ingredient.name + `-name`} value={ingredient.name} onChange={handleIngredientChange} required/>
+                                        <input type="text" name={ingredient.name + `-name`} value={ingredient.name} onChange={handleIngredientChange} required />
+                                        {handleIngredientError(index, "name")}
                                         <label htmlFor={ingredient.name + `-measurement`}>Quantity</label>
                                         <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange} min="0" required />
+                                        {handleIngredientError(index, "quantity")}
                                         <label htmlFor={ingredient.name + `-unit`}>Unit</label>
                                         <select name={ingredient.name + `-unit`} id="" value={ingredient.unit} onChange={handleIngredientChange} required>
                                             <option value="">Choose a unit type</option>
@@ -153,16 +228,22 @@ const RecipeCreate = () => {
                                             <option value="quart">quart</option>
                                             <option value="tbsp">tbsp</option>
                                         </select>
+                                        {handleIngredientError(index, "unit")}
                                         <button onClick={removeIngredient}>
                                             Remove
                                         </button>
                                     </div>
                                 )
                             })}
+                            {errorData.name && <p className='error-message'>{errorData.name}</p>}
+                            {errorData.measurement && <p className='error-message'>{errorData.measurement}</p>}
+                            {errorData.unit && <p className='error-message'>{errorData.unit}</p>}
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
+                            <button onClick={nextPage}
+                            // disabled={validatePage()}
+                            >Next</button>
                         </div>
                     </section>
                 )
@@ -171,11 +252,12 @@ const RecipeCreate = () => {
                     <section>
                         <div className="form-control">
                             <label htmlFor="preparationTime">How long does it take to prepare in hours</label>
-                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} min="0" onChange={handleChange} />
+                            <input type="number" name="preparationTime" id="" value={formData.preparationTime} min="0" onChange={handleChange} required />
+                            {errorData.preparationTime && <p className='error-message'>{errorData.preparationTime}</p>}
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>
                         </div>
                     </section>
                 )
@@ -198,7 +280,7 @@ const RecipeCreate = () => {
                         </ol>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>
                         </div>
                     </section>
                 )
@@ -211,7 +293,7 @@ const RecipeCreate = () => {
                         </div>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button onClick={nextPage} disabled={validatePage()}>Next</button>                            
+                            <button onClick={nextPage} disabled={validatePage()}>Next</button>
                         </div>
                     </section>
                 )
@@ -221,8 +303,8 @@ const RecipeCreate = () => {
                         <h1>All set?</h1>
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
-                            <button type="submit">Submit</button>                          
-                        </div>                    
+                            <button type="submit">Submit</button>
+                        </div>
                     </section>
                 )
         }
@@ -230,13 +312,15 @@ const RecipeCreate = () => {
     if (!user) {
         return <Navigate to="/sign-in" />
     }
+    console.log(errorData)
 
     return (
-            <section>
-                <form action="" onSubmit={handleSubmit}>
-                    {currentPage()}
-                </form>
-            </section>
+        <section>
+            <form action="" onSubmit={handleSubmit}>
+                {currentPage()}
+            </form>
+            <ToastContainer />
+        </section>
 
 
     )
