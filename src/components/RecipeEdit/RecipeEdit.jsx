@@ -15,7 +15,7 @@ const RecipeEdit = () => {
         instructions: []
     })
     const [progress, setProgress] = useState(0);
-    const [error, setErrorData] = useState({});
+    const [errorData, setErrorData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const { recipeId } = useParams();
     const navigate = useNavigate();
@@ -24,6 +24,7 @@ const RecipeEdit = () => {
         const getFormData = async () => {
             try {
                 const { data } = await recipeShow(recipeId);
+                console.log("here")
                 if(data.preparationTime ===null){
                     data.preparationTime = "";
                 }
@@ -52,10 +53,8 @@ const RecipeEdit = () => {
         } catch (error) {
             if (error.response.status === 500) {
                 setErrorData({ message: 'Something went wrong!' });
-                toast("Something went wrong")
             } else {
                 setErrorData(error.response.data);
-                toast(error.response.data)
             }
         }
 
@@ -258,7 +257,7 @@ const RecipeEdit = () => {
     if (!user) {
         return <Navigate to="/sign-in" />
     }    
-    toast(error)
+    toast(errorData.message)
     
     return (
 

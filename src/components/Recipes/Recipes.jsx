@@ -7,13 +7,15 @@ const Recipes = () => {
     // ? Hooks
 
     const [recipes, setRecipe] = useState([]);
+    const [errorData, setErrorData] = useState({})
     useEffect(() => {
         const getRecipes = async () => {
             try {
                 const { data } = await recipeIndex();
                 setRecipe(data);
             } catch (error) {
-
+                console.log(error)
+                setErrorData(error.response.data)
             }
         }
         getRecipes();
