@@ -23,7 +23,6 @@ const Recipes = ({ filterByUser, userId }) => {
                 setRecipe(filteredRecipes);
                 setQueryFilteredRecipes(filteredRecipes);
             } catch (error) {
-                console.log(error)
                 setErrorData(error.response.data)
             }
         }
@@ -38,42 +37,36 @@ const Recipes = ({ filterByUser, userId }) => {
                 const [paramter, searchValue] =  query.split("-");
                 if(paramter.toLowerCase() == "name"){
                     const results = recipes.filter(recipe=>{
-                        console.log(recipe.name, searchValue)
-                        if(recipe.name.toLowerCase().includes(searchValue.toLowerCase())){
+                        if(recipe.name.toLowerCase().trim().includes(searchValue.toLowerCase().trim())){
                             return true
                         }
                 })
-                setQueryFilteredRecipes(results);
-                console.log(results)  
+                setQueryFilteredRecipes(results)
                 }else if(paramter.toLowerCase() == "author"){
                     const results = recipes.filter(recipe=>{
-                        if(recipe.author.username.toLowerCase().includes(searchValue.toLowerCase())){
+                        if(recipe.author.username.toLowerCase().trim().includes(searchValue.toLowerCase().trim())){
                             return true
                         }
                 })
-                setQueryFilteredRecipes(results);
-                console.log(results)  
+                setQueryFilteredRecipes(results)
                 }else if(paramter.toLowerCase() == "ingredient"){
                     const results = recipes.filter(recipe=>{
-                        if(recipe.ingredients.some(ingredient=>ingredient.name.toLowerCase().includes(searchValue.toLowerCase()))){
+                        if(recipe.ingredients.some(ingredient=>ingredient.name.toLowerCase().trim().includes(searchValue.toLowerCase().trim()))){
                             return true
                         }
                     })
                     setQueryFilteredRecipes(results);
-                    console.log(results)  
                 }else{
                     const results = {};
                     setQueryFilteredRecipes(results);
-                    console.log(results)
                 }
             }else{
                 const results = recipes.filter(recipe=>{
-                    if(recipe.name.toLowerCase().includes(searchValue.toLowerCase()) ||recipe.author.username.toLowerCase().includes(searchValue.toLowerCase()) || recipe.ingredients.some(ingredient=>ingredient.name.toLowerCase().includes(searchValue.toLowerCase()))){
+                    if(recipe.name.toLowerCase().trim().includes(query.toLowerCase().trim()) ||recipe.author.username.trim().toLowerCase().includes(query.toLowerCase().trim()) || recipe.ingredients.some(ingredient=>ingredient.name.toLowerCase().trim().includes(query.toLowerCase().trim()))){
                         return true
                     }
                 })
-                setQueryFilteredRecipes(results);
-                console.log(results)                
+                setQueryFilteredRecipes(results)              
             }
 
             
