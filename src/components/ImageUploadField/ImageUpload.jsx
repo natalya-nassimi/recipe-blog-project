@@ -1,12 +1,21 @@
-export default function ImageUploadField() {
+import { uploadImage } from '../../services/cloudinary'
+
+export default function ImageUploadField({ labelText = 'Upload an image', fieldName = 'image', setImage}) {
     
     const handleFileUpload = async(e) => {
-        const file = e.target.files[0]
+        try {
+            const file = e.target.files[0]
+            const { data } = await uploadImage(file)
+            setImage(data.secure_url)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
         <>
-            <input type='file' name='image' id='image' onChange={handleFileUpload} />
+            <label htmlFor={fieldName}>{labelText}</label>
+            <input type='file' name={fieldName} id={fieldName} onChange={handleFileUpload} />
         </>
     )
 }

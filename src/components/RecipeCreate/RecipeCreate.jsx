@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router";
 import { UserContext } from "../../contexts/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import { recipeCreate } from "../../services/recipes";
+import ImageUploadField from "../ImageUploadField/ImageUpload";
 const RecipeCreate = () => {
     const { user } = useContext(UserContext)
     const [formData, setFormData] = useState({
@@ -42,6 +43,11 @@ const RecipeCreate = () => {
             [event.target.name]: event.target.value
         });
     }
+
+    const setMealImage = (imageURL) => {
+        setFormData({ ...formData, image: imageURL})
+    }
+
     const handleIngredientChange = (event) => {
         const newFormData = { ...formData };
         const [element, field] = event.target.name.split('-');
@@ -311,10 +317,15 @@ const RecipeCreate = () => {
             case 4:
                 return (
                     <section>
-                        <div className="form-control">
+                        {/* <div className="form-control">
                             <label htmlFor="image">Show off a picture of your meal</label>
                             <input type="file" name="image" id="" accept="image/*" value={formData.image} onChange={handleChange} />
-                        </div>
+                        </div> */}
+                        <ImageUploadField
+                            labelText="Show off a picture of your meal"
+                            fieldName='Image'
+                            setImage={setMealImage}
+                        />
                         {errorData.image && <p className='error-message'>{errorData.image}</p>}
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
