@@ -32,7 +32,6 @@ const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
             const { data } = await recipeCommentCreate(recipeId, formData);
             console.log(data)
             toast("Successfully created comment.");
-            // console.log( {...formData, [author]: user})
             setRecipe(prev => ({ ...prev, ["comments"]: [...prev["comments"], data] }))
             setFormData({
                 rating: "",
@@ -40,9 +39,11 @@ const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
             })
             setIsCommentOpen(false);
         } catch (error) {
-            console.log(error)
+            const {data} = error.response;
             setErrorData(error.response.data);
-            toast(error.response.data.message);
+            Object.keys(data).map(parameter =>{
+                toast(data[parameter])
+            })
         }
     }
     console.log(formData)

@@ -23,11 +23,14 @@ const RecipeCreate = () => {
             navigate(`/recipes/${data._id}`);
         } catch (error) {
             console.log(error)
+            const {data} = error.response;
             if (error.response.status === 500) {
                 toast("Something went wrong!")
                 return setErrorData({ message: 'Something went wrong!' })
             } else {
-                toast(error.response.data.message);
+                Object.keys(data).map(parameter =>{
+                    toast(data[parameter])
+                })
                 setErrorData(error.response.data)
 
             }

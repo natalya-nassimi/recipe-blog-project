@@ -29,7 +29,7 @@ const RecipeEdit = () => {
                 }
                 setFormData(data);
             } catch (error) {
-                
+                // if()
                 const {status, data} = error.response;
                  if (status === 500) {
                     setErrorData({ message: 'Something went wrong. Please try again.' });
@@ -37,7 +37,9 @@ const RecipeEdit = () => {
                     toast("The page you are trying to access does not exist")
                     navigate('/page-not-found');
                 }else {
-                    toast(data.message)
+                    Object.keys(data).map(parameter =>{
+                        toast(data[parameter])
+                    })
                     setErrorData(data)
                 }
             }finally{
@@ -56,8 +58,11 @@ const RecipeEdit = () => {
                 toast("Something went wrong! Please try again.")
                 setErrorData({ message: 'Something went wrong! Please try again.'});
             } else {
-                toast(error.response.data.message)
-                setErrorData(error.response.data);
+                const {data} = error.response
+                Object.keys(data).map(parameter =>{
+                    toast(data[parameter])
+                })
+                setErrorData(data);
             }
         }
 

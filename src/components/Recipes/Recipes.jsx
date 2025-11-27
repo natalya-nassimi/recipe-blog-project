@@ -30,7 +30,9 @@ const Recipes = ({ filterByUser, userId }) => {
 
     return (
         <>
-            <section className="recipes-container">
+        {errorData.message?
+            <p className="error-message">{errorData.message}</p>
+            :<section className="recipes-container">
                 {recipes.length > 0 ? recipes.map(recipe => {
                     return (
                         <RecipeCard key={recipe._id} recipe={recipe} />
@@ -38,6 +40,7 @@ const Recipes = ({ filterByUser, userId }) => {
                     )
                 }) : <p>No Recipes Found</p>}
             </section>
+        }
         </>
     )
 }

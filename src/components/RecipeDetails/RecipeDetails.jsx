@@ -46,7 +46,8 @@ const RecipeDetails = () => {
 
 
     return (
-        loading ? <p className="loading">Loading ...</p> :
+        <>
+        {errorData.message ? <p className="error-message">{errorData.message}</p>:(loading ? <p className="loading">Loading ...</p> :
             <>
                 <div className='recipe-details-container'>
                     <section className="recipe-header-card">
@@ -95,8 +96,12 @@ const RecipeDetails = () => {
                         </section>
                     </div>
                 </div>
-                <ToastContainer/>
+                
             </>
+        )
+    } 
+    <ToastContainer/>
+    </>
     )
 }
 
