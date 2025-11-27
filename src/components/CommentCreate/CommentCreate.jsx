@@ -28,9 +28,10 @@ const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
         event.preventDefault()
         try {
             const { data } = await recipeCommentCreate(recipeId,formData);
+            console.log(data)
             toast("Successfully created comment.");
             // console.log( {...formData, [author]: user})
-            setRecipe(prev => ({...prev, ["comments"]: [...prev["comments"], {...formData, ["author"]: user}]}))
+            setRecipe(prev => ({...prev, ["comments"]: [...prev["comments"], data]}))
             setFormData({
                 rating: "",
                 description: ""                 

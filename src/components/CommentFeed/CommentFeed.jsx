@@ -1,7 +1,7 @@
 const CommentFeed = ({ recipe }) => {
     return (
         <div>
-            {recipe.comments.map(comment => {
+            {recipe.comments.map((comment, key) => {
                 return (
                     <>
                     <div>
@@ -9,7 +9,7 @@ const CommentFeed = ({ recipe }) => {
                             {/*Username */}
                             <p>{comment.author.username}</p>
                             {/*CommentDate */}
-                            <p>{comment?.createdAt?.split("T")[0]}</p>                            
+                            <p>{comment.createdAt.split("T")[0]}</p>                            
                         </div>
                         {/*CommentDescription */}
                         <div>
