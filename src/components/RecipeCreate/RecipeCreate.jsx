@@ -90,8 +90,8 @@ const RecipeCreate = () => {
         switch (progress) {
             case 0:
                 if (formData.name.trim() === "") {
-                    setErrorData(prev => ({ ...prev, ["message"]: 'No recipe name was input. Please add recipe name' }));
-                    toast('No recipe name was input. Please add recipe name')
+                    setErrorData(prev => ({ ...prev, ["message"]: 'No recipe name was specified. Please add recipe name' }));
+                    toast('No recipe name was specified. Please add a recipe name')
                     return true;
                 } else {
                     return false;
@@ -103,26 +103,43 @@ const RecipeCreate = () => {
                     return true;
                 }
                 const ingredientErrors = formData.ingredients.reduce((accumulator, ingredient, index) => {
+
                     if (ingredient.name.trim() == "") {
-                        accumulator.push(`${index}-No ingredient name was input. Please add ingredient name`);
+                        if(!accumulator[index]){
+                            accumulator[index] ={}   ;
+                        }
+                        accumulator[index]["name"] ="No ingredient name was specified. Please add ingredient name"
                     }
                     if (ingredient.measurement == "") {
-                        accumulator.push(`${index}-No ingredient quantity was input. Please add ingredient quantity`);
+                        if(!accumulator[index]){
+                            accumulator[index] ={}   ;
+                        }                        
+                        accumulator[index]["measurement"] = "No ingredient quantity was specified. Please add ingredient quantity";
+                    }else if(ingredient.measurement <0){
+                        if(!accumulator[index]){
+                            accumulator[index] ={}   ;
+                        }                        
+                        accumulator[index]["measurement"] = "Ingredient quantity must not be less than 0";                        
                     }
                     if (ingredient.unit == "") {
-                        accumulator.push(`${index}-No ingredient unit was selected. Please add ingredient unit`);
+                        if(!accumulator[index]){
+                            accumulator[index] ={}   ;
+                        }
+                        accumulator[index]["unit"] = "No ingredient unit was selected. Please add ingredient unit";
                     }
                     return accumulator
-                }, [])
-                if (ingredientErrors.length == 0) {
+                }, {})
+                if (Object.keys(ingredientErrors).length == 0) {
                     return false;
-                } else if (ingredientErrors.length == 1) {
+                } else if (Object.keys(ingredientErrors).length == 1) {
+                    const displayedPositions = Object.keys(ingredientErrors).map(index => parseInt(index)+1);
                     setErrorData(prev => ({ ...prev, ["message"]: ingredientErrors }))
-                    toast(ingredientErrors[0].split("-")[1])
+                    toast(`Error on ingredient ${displayedPositions}`)
                     return true
                 } else {
+                    const displayedPositions = Object.keys(ingredientErrors).map(index => parseInt(index)+1);
                     setErrorData(prev => ({ ...prev, ["message"]: ingredientErrors }))
-                    toast(`You have ${ingredientErrors.length} errors on this page`);
+                    toast(`You have ${displayedPositions.length} errors on this page, at ingredients ${displayedPositions}`);
                     return true;
                 }
             case 2:
@@ -150,7 +167,6 @@ const RecipeCreate = () => {
                         }
                         return accumulator;
                     }, [])
-                    console.log(instructionError)
                     if(instructionError.length ==0){
                         return false;
                     }else if(instructionError.length==1){
@@ -159,7 +175,7 @@ const RecipeCreate = () => {
                         return true;
                     }else{
                         const displayedPositions = instructionError.map(index => index+1);
-                        toast(`You have ${instructionError.length} errors on this page at fields ${displayedPositions}`);
+                        toast(`You have ${instructionError.length} errors on this page, at fields ${displayedPositions}`);
                         setErrorData(prev => ({ ...prev, ["message"]:  instructionError }));
                         return true;
                     }
@@ -180,22 +196,6 @@ const RecipeCreate = () => {
     const previousPage = (event) => {
         event.preventDefault()
         setProgress(prev => prev - 1)
-    }
-    const handleIngredientError = (index, field) => {
-        if (errorData.message && errorData.message.constructor === Array) {
-            let output = null;
-            errorData.message.some(errorMessage =>{
-                const [ingredientPos, errorBody] = errorMessage.split("-");
-                const position = parseInt(ingredientPos);
-                const errorType = errorBody.split(" ").pop()
-                if(position == index && field ==errorType){
-                    output =<p className='error-message'>{errorBody}</p>
-                    return true;
-                }
-            });
-            return output;
-        }
-        return null;
     }
     const currentPage = () => {
         switch (progress) {
@@ -226,10 +226,10 @@ const RecipeCreate = () => {
                                     <div className="form-control" key={index}>
                                         <label htmlFor={ingredient.name + `-name`}>Ingredient name</label>
                                         <input type="text" name={ingredient.name + `-name`} value={ingredient.name} onChange={handleIngredientChange} required />
-                                        {handleIngredientError(index, "name")}
+                                        {(errorData.message && typeof errorData.message === 'object' && errorData.message[index] && errorData.message[index]["name"])? <p className='error-message'>{errorData.message[index]["name"]}</p>:null} 
                                         <label htmlFor={ingredient.name + `-measurement`}>Quantity</label>
                                         <input type="number" name={ingredient.name + `-measurement`} value={ingredient.measurement} onChange={handleIngredientChange} min="0" required />
-                                        {handleIngredientError(index, "quantity")}
+                                        {(errorData.message && typeof errorData.message === 'object'&& errorData.message[index] && errorData.message[index]["measurement"])? <p className='error-message'>{errorData.message[index]["measurement"]}</p>:null}
                                         <label htmlFor={ingredient.name + `-unit`}>Unit</label>
                                         <select name={ingredient.name + `-unit`} id="" value={ingredient.unit} onChange={handleIngredientChange} required>
                                             <option value="">Choose a unit type</option>
@@ -242,7 +242,7 @@ const RecipeCreate = () => {
                                             <option value="quart">quart</option>
                                             <option value="tbsp">tbsp</option>
                                         </select>
-                                        {handleIngredientError(index, "unit")}
+                                        {(errorData.message && typeof errorData.message === 'object' && errorData.message[index] && errorData.message[index]["unit"])? <p className='error-message'>{errorData.message[index]["unit"]}</p>:null}
                                         <button onClick={removeIngredient}>
                                             Remove
                                         </button>
