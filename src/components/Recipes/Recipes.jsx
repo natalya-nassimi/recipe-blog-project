@@ -3,7 +3,7 @@ import { recipeIndex } from "../../services/recipes";
 import { useEffect, useState } from "react";
 import './Recipes.css'
 import { UserProvider } from "../../contexts/UserContext";
-
+import LoadingIcon from "../LoadingIcon/LoadingIcon";
 const Recipes = ({ filterByUser, userId }) => {
 
     // ? Hooks
@@ -11,11 +11,12 @@ const Recipes = ({ filterByUser, userId }) => {
     const [recipes, setRecipe] = useState([]);
     const [queryfilteredRecipes, setQueryFilteredRecipes] = useState([]);
     const [errorData, setErrorData] = useState({})
+    const [isLoading, setIsLoading] =  useState(true);
     useEffect(() => {
         const getRecipes = async () => {
             try {
                 const { data } = await recipeIndex();
-                
+                setIsLoading(false);
                 const filteredRecipes = filterByUser && userId
                 ? data.filter(recipe => recipe.author?._id === userId)
                 : data;
@@ -76,20 +77,25 @@ const Recipes = ({ filterByUser, userId }) => {
         <>
         {errorData.message?
             <p className="error-message">{errorData.message}</p>
-            :<>
-            <label htmlFor="searchbar">Search</label>
-            <input type="search" name="searchbar" placeholder="Search by recipe name, ingredients or author" onChange={handleSearch} />
-            <p>Tip: You can search by specifically name author or ingredient but using "name-", "author-" or "ingredient-"</p>
-            <section className="recipes-container">
-                
-                {queryfilteredRecipes.length > 0 ? queryfilteredRecipes.map(recipe => {
-                    return (
-                        <RecipeCard key={recipe._id} recipe={recipe} />
+            : (isLoading
+                ? <LoadingIcon></LoadingIcon> 
+                :<>
+                    <label htmlFor="searchbar">Search</label>
+                    <input type="search" name="searchbar" placeholder="Search by recipe name, ingredients or author" onChange={handleSearch} />
+                    <p>Tip: You can search by specifically name author or ingredient but using "name-", "author-" or "ingredient-"</p>
+                    <section className="recipes-container">
+                        
+                        {queryfilteredRecipes.length > 0 ? queryfilteredRecipes.map(recipe => {
+                            return (
+                                <RecipeCard key={recipe._id} recipe={recipe} />
 
-                    )
-                }) : <p>No Recipes Found</p>}
-            </section>
-            </>
+                            )
+                        }) : <p>No Recipes Found</p>}
+                    </section>                
+                </>
+                )
+        
+
         }
         </>
     )
