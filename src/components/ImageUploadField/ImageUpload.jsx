@@ -1,6 +1,6 @@
 import { uploadImage } from '../../services/cloudinary'
 
-export default function ImageUploadField({ labelText = 'Upload an image', fieldName = 'image', setImage}) {
+export default function ImageUploadField({ labelText = 'Upload an image', fieldName = 'image', setImage, existingImage }) {
     
     const handleFileUpload = async(e) => {
         try {
@@ -14,8 +14,13 @@ export default function ImageUploadField({ labelText = 'Upload an image', fieldN
 
     return (
         <>
+        <div className='form-control'>
             <label htmlFor={fieldName}>{labelText}</label>
+            {existingImage && (
+                <img src={existingImage} alt="currentImage" className="image-preview" />
+            )}
             <input type='file' name={fieldName} id={fieldName} onChange={handleFileUpload} />
+        </div>
         </>
     )
 }

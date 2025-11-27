@@ -8,7 +8,7 @@
     background: #c7dfff76;
     text-align: center;
     max-width: 800px;
-    padding: 20px;
+    padding: 5px;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.217);
     margin-bottom: 60px;
@@ -17,8 +17,8 @@
 .recipe-header-card h1 {
     font-size: 40px;
     font-weight: 600;
-    color: rgb(53, 73, 112);
-    margin-bottom: 30px;
+    color: rgb(0, 0, 0);
+    margin-bottom: 20px;
 }
 
 .recipe-header-card p {
@@ -26,6 +26,20 @@
     font-size: 18px;
     font-weight: 300;
     margin: 10px 5px;
+}
+
+.recipe-image-container {
+    border-radius: 15px;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+}
+
+.recipe-image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .details-grid {

@@ -8,6 +8,8 @@ import './RecipeDetails.css'
 import CommentCreate from "../CommentCreate/CommentCreate";
 import CommentFeed from "../CommentFeed/CommentFeed";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
+import defaultImage from '../../assets/default-image.png'
+
 const RecipeDetails = () => {
     const [recipe, setRecipe] = useState({
         name: "",
@@ -49,6 +51,9 @@ const RecipeDetails = () => {
         <>
         {errorData.message ? <p className="error-message">{errorData.message}</p>:(loading ? <LoadingIcon></LoadingIcon> :
             <>
+                <div className="recipe-image-container">
+                    <img className='recipe-image' src={recipe.image || defaultImage} alt={recipe.name} />
+                </div>
                 <div className='recipe-details-container'>
                     <section className="recipe-header-card">
                         <h1>{recipe.name}</h1>
@@ -77,7 +82,7 @@ const RecipeDetails = () => {
                                 })}
                             </ol>
                         </section>
-
+                        
                         {user && user._id === recipe.author._id && (
                             <section>
                                 <div className='user-actions'>
