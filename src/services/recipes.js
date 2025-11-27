@@ -34,3 +34,10 @@ export const recipeDelete = (recipeId) => {
         }
     })
 }
+export const recipeCommentCreate =  (recipeId, formData)=>{
+    return api.post(`/${recipeId}/comments`, formData, {
+        headers: {
+            Authorization: `Bearer ${getToken()}`
+        }
+    })
+}
