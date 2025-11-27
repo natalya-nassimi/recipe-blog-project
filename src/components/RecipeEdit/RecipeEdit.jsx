@@ -130,7 +130,7 @@ const RecipeEdit = () => {
                 } else {
                     return false;
                 }
-            case 1:
+            case 1: {
                 if (formData.ingredients.length < 1) {
                     setErrorData(prev => ({ ...prev, ["message"]: 'At least 1 ingredient must be specified.' }));
                     toast('At least 1 ingredient must be specified.');
@@ -176,7 +176,7 @@ const RecipeEdit = () => {
                     toast(`You have ${displayedPositions.length} errors on this page, at ingredients ${displayedPositions}.`);
                     return true;
                 }
-            case 2:
+            } case 2:
                 if (typeof formData.preparationTime ==="string" && formData.preparationTime.trim() === "") {
                     setErrorData(prev => ({ ...prev, ["message"]: 'No preparation time was specified. Please specify a preparation duration.' }));
                     toast('No preparation time was specified. Please specify a preparation duration.' )
