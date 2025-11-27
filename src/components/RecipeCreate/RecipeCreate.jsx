@@ -25,9 +25,12 @@ const RecipeCreate = () => {
         } catch (error) {
             console.log(error)
             if (error.response.status === 500) {
+                toast("Something went wrong!")
                 return setErrorData({ message: 'Something went wrong!' })
             } else {
+                toast(error.response.data.message);
                 setErrorData(error.response.data)
+
             }
 
         }
@@ -90,16 +93,16 @@ const RecipeCreate = () => {
         switch (progress) {
             case 0:
                 if (formData.name.trim() === "") {
-                    setErrorData(prev => ({ ...prev, ["message"]: 'No recipe name was specified. Please add recipe name' }));
-                    toast('No recipe name was specified. Please add a recipe name')
+                    setErrorData(prev => ({ ...prev, ["message"]: 'No recipe name was specified. Please add a recipe name.' }));
+                    toast('No recipe name was specified. Please add a recipe name.')
                     return true;
                 } else {
                     return false;
                 }
             case 1:
                 if (formData.ingredients.length < 1) {
-                    setErrorData(prev => ({ ...prev, ["message"]: 'At least 1 ingredient must be added' }));
-                    toast('At least 1 ingredient must be added');
+                    setErrorData(prev => ({ ...prev, ["message"]: 'At least 1 ingredient must be specified.' }));
+                    toast('At least 1 ingredient must be specified.');
                     return true;
                 }
                 const ingredientErrors = formData.ingredients.reduce((accumulator, ingredient, index) => {
@@ -108,24 +111,24 @@ const RecipeCreate = () => {
                         if(!accumulator[index]){
                             accumulator[index] ={}   ;
                         }
-                        accumulator[index]["name"] ="No ingredient name was specified. Please add ingredient name"
+                        accumulator[index]["name"] ="No ingredient name was specified. Please add an ingredient name."
                     }
                     if (ingredient.measurement == "") {
                         if(!accumulator[index]){
                             accumulator[index] ={}   ;
                         }                        
-                        accumulator[index]["measurement"] = "No ingredient quantity was specified. Please add ingredient quantity";
+                        accumulator[index]["measurement"] = "No ingredient quantity was specified. Please add an ingredient quantity.";
                     }else if(ingredient.measurement <0){
                         if(!accumulator[index]){
                             accumulator[index] ={}   ;
                         }                        
-                        accumulator[index]["measurement"] = "Ingredient quantity must not be less than 0";                        
+                        accumulator[index]["measurement"] = "The ingredient quantity specified must not be less than 0.";                        
                     }
                     if (ingredient.unit == "") {
                         if(!accumulator[index]){
                             accumulator[index] ={}   ;
                         }
-                        accumulator[index]["unit"] = "No ingredient unit was selected. Please add ingredient unit";
+                        accumulator[index]["unit"] = "No ingredient unit was selected. Please add an ingredient unit.";
                     }
                     return accumulator
                 }, {})
@@ -134,31 +137,31 @@ const RecipeCreate = () => {
                 } else if (Object.keys(ingredientErrors).length == 1) {
                     const displayedPositions = Object.keys(ingredientErrors).map(index => parseInt(index)+1);
                     setErrorData(prev => ({ ...prev, ["message"]: ingredientErrors }))
-                    toast(`Error on ingredient ${displayedPositions}`)
+                    toast(`Error on ingredient ${displayedPositions}.`)
                     return true
                 } else {
                     const displayedPositions = Object.keys(ingredientErrors).map(index => parseInt(index)+1);
                     setErrorData(prev => ({ ...prev, ["message"]: ingredientErrors }))
-                    toast(`You have ${displayedPositions.length} errors on this page, at ingredients ${displayedPositions}`);
+                    toast(`You have ${displayedPositions.length} errors on this page, at ingredients ${displayedPositions}.`);
                     return true;
                 }
             case 2:
                 if (formData.preparationTime.trim() === "") {
-                    setErrorData(prev => ({ ...prev, ["message"]: 'No preparation time was specified. Please specify preparation time' }));
-                    toast('No preparation time was specified. Please specify preparation time' )
+                    setErrorData(prev => ({ ...prev, ["message"]: 'No preparation time was specified. Please specify a preparation duration.' }));
+                    toast('No preparation time was specified. Please specify a preparation duration.' )
                     return true;
                 }
                  else if(formData.preparationTime <0){
-                    setErrorData(prev => ({ ...prev, ["message"]: 'The preparation time must not be negative' }));
-                    toast('The preparation time must not be negative')
+                    setErrorData(prev => ({ ...prev, ["message"]: 'The preparation time must not be negative. Specify a non negative duration.' }));
+                    toast('The preparation time must not be negative. Specify a non negative duration.')
                     return true;
                 }else {
                     return false;
                 }
             case 3:
                 if (formData.instructions.length < 1) {
-                    setErrorData(prev => ({ ...prev, ["message"]: 'At least 1 instruction must be added' }));
-                    toast('At least 1 instruction must be added');
+                    setErrorData(prev => ({ ...prev, ["message"]: 'At least 1 instruction must be specified.' }));
+                    toast('At least 1 instruction must be specified.');
                     return true;
                 }else{
                     const instructionError = formData.instructions.reduce((accumulator, instruction, index)=>{
@@ -170,12 +173,12 @@ const RecipeCreate = () => {
                     if(instructionError.length ==0){
                         return false;
                     }else if(instructionError.length==1){
-                        toast(`No instruction was specified at field ${instructionError[0]+1}`);
+                        toast(`No instruction was specified at field ${instructionError[0]+1}.`);
                         setErrorData(prev => ({ ...prev, ["message"]:  instructionError }));
                         return true;
                     }else{
                         const displayedPositions = instructionError.map(index => index+1);
-                        toast(`You have ${instructionError.length} errors on this page, at fields ${displayedPositions}`);
+                        toast(`You have ${instructionError.length} errors on this page, at fields ${displayedPositions}.`);
                         setErrorData(prev => ({ ...prev, ["message"]:  instructionError }));
                         return true;
                     }
@@ -195,6 +198,9 @@ const RecipeCreate = () => {
     }
     const previousPage = (event) => {
         event.preventDefault()
+        const newErrorData = { ...errorData }
+        delete newErrorData.message
+        setErrorData(newErrorData)
         setProgress(prev => prev - 1)
     }
     const currentPage = () => {
@@ -205,6 +211,7 @@ const RecipeCreate = () => {
                         <div className="form-control">
                             <label htmlFor="name">Recipe Name</label>
                             <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+                            {errorData.message && <p className="error-message">{errorData.message}</p>}
                             {errorData.name && <p className='error-message'>{errorData.name}</p>}
                         </div>
                         <div className="formNavigation">
@@ -265,7 +272,7 @@ const RecipeCreate = () => {
                         <div className="form-control">
                             <label htmlFor="preparationTime">How long does it take to prepare in hours</label>
                             <input type="number" name="preparationTime" id="" value={formData.preparationTime} min="0" onChange={handleChange} required />
-                            {}
+                            {errorData.message && <p className="error-message">{errorData.message}</p>}
                             {errorData.preparationTime && <p className='error-message'>{errorData.preparationTime}</p>}
                         </div>
                         <div className="formNavigation">
@@ -292,6 +299,7 @@ const RecipeCreate = () => {
                                 })
                             }
                         </ol>
+                        {errorData.instructions && <p className='error-message'>{errorData.instructions}</p>}
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
                             <button onClick={nextPage}>Next</button>
@@ -305,6 +313,7 @@ const RecipeCreate = () => {
                             <label htmlFor="image">Show off a picture of your meal</label>
                             <input type="file" name="image" id="" accept="image/*" value={formData.image} onChange={handleChange} />
                         </div>
+                        {errorData.image && <p className='error-message'>{errorData.image}</p>}
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
                             <button onClick={nextPage}>Next</button>
@@ -315,6 +324,7 @@ const RecipeCreate = () => {
                 return (
                     <section>
                         <h1>All set?</h1>
+                        {errorData.message && <p className='error-message'>{errorData.message}</p>}
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
                             <button type="submit">Submit</button>
