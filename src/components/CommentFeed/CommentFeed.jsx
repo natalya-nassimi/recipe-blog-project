@@ -1,24 +1,21 @@
 const CommentFeed = ({ recipe }) => {
     return (
         <div>
-            {recipe.comments.map((comment, key) => {
+            {recipe.comments.map((comment) => {
+                console.log(comment._id)
                 return (
-                    <>
-                    <div>
+                    <div key={comment._id}>
                         <div>
                             {/*Username */}
                             <p>{comment.author.username}</p>
                             {/*CommentDate */}
-                            <p>{comment.createdAt.split("T")[0]}</p>                            
+                            <p>{comment.createdAt.split("T")[0]}</p>
                         </div>
                         {/*CommentDescription */}
                         <div>
                             <p>{comment.description}</p>
                         </div>
-
                     </div>
-                    <hr/>
-                    </>
                 )
             })}
         </div>

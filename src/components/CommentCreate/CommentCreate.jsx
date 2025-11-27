@@ -2,7 +2,7 @@
 import { toast } from "react-toastify";
 import { recipeCommentCreate } from "../../services/recipes";
 import { useState } from "react";
-const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
+const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
     const [formData, setFormData] = useState({
         rating: "",
         description: "",
@@ -21,20 +21,20 @@ const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
     }
     const handleChange = (event) => {
         const description = event.target.value;
-        setFormData({...formData, [event.target.name]: description})
+        setFormData({ ...formData, [event.target.name]: description })
 
     }
     const handleSubmitComment = async (event) => {
         event.preventDefault()
         try {
-            const { data } = await recipeCommentCreate(recipeId,formData);
+            const { data } = await recipeCommentCreate(recipeId, formData);
             console.log(data)
             toast("Successfully created comment.");
             // console.log( {...formData, [author]: user})
-            setRecipe(prev => ({...prev, ["comments"]: [...prev["comments"], data]}))
+            setRecipe(prev => ({ ...prev, ["comments"]: [...prev["comments"], data] }))
             setFormData({
                 rating: "",
-                description: ""                 
+                description: ""
             })
             setIsCommentOpen(false);
         } catch (error) {
@@ -54,7 +54,7 @@ const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
                 <form action="">
                     <textarea name="description" onChange={handleChange} value={formData.description} required>  </textarea>
                     <button onClick={() => setIsCommentOpen(false)}>Close</button>
-                    <button onClick={handleSubmitComment}>Post</button>                    
+                    <button onClick={handleSubmitComment}>Post</button>
                 </form>
 
             </div>
