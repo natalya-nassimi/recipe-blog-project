@@ -2,6 +2,7 @@
 import { toast } from "react-toastify";
 import { recipeCommentCreate } from "../../services/recipes";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
     const [formData, setFormData] = useState({
         rating: "",
@@ -11,6 +12,7 @@ const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
     console.log(user)
     const [errorData, setErrorData] = useState({})
     const [isCommentOpen, setIsCommentOpen] = useState(false)
+    const navigate = useNavigate();
     const handleWriteComment = (event) => {
         event.preventDefault()
         if (!user) {
@@ -49,7 +51,7 @@ const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
             {!recipe.comments.length > 0 &&
                 <p>Be the first to leave a comment.</p>
             }
-            {!isCommentOpen && <button onClick={handleWriteComment}>Leave comment</button>}
+            {!isCommentOpen && <button onClick={handleWriteComment}>{user?"Leave comment": "Sign in to leave a comment"}</button>}
             {isCommentOpen && <div>
                 <form action="">
                     <textarea name="description" onChange={handleChange} value={formData.description} required>  </textarea>
