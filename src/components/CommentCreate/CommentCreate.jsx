@@ -1,4 +1,4 @@
-
+import './CommentCreate.css'
 import { toast } from "react-toastify";
 import { recipeCommentCreate } from "../../services/recipes";
 import { useState } from "react";
@@ -52,12 +52,12 @@ const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
             {!recipe.comments.length > 0 &&
                 <p>Be the first to leave a comment.</p>
             }
-            {!isCommentOpen && <button onClick={handleWriteComment}>{user?"Leave comment": "Sign in to leave a comment"}</button>}
+            {!isCommentOpen && <button className='comment-button' onClick={handleWriteComment}>{user?"Leave comment": "Sign in to leave a comment"}</button>}
             {isCommentOpen && <div>
-                <form action="">
+                <form className='post-comment' action="">
                     <textarea name="description" onChange={handleChange} value={formData.description} required>  </textarea>
-                    <button onClick={() => setIsCommentOpen(false)}>Close</button>
-                    <button onClick={handleSubmitComment}>Post</button>
+                    <button className='close-btn' onClick={() => setIsCommentOpen(false)}>Close</button>
+                    <button className='post-btn' onClick={handleSubmitComment}>Post</button>
                 </form>
 
             </div>

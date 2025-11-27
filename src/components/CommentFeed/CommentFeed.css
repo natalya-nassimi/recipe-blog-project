@@ -1,0 +1,40 @@
+.comment-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comment-card {
+    background: rgba(168, 226, 255, 0.255);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.277);
+    padding: 15px;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.comment-author {
+    color: rgb(86, 86, 86);
+}
+
+.comment-date {
+    color: rgb(86, 86, 86);
+}
+
+.comment-body {
+    margin-top: 5px;
+    background: rgb(4, 15, 73);
+    padding: 1px 0px;
+    border-radius: 15px;
+}
+
+.comment-description {
+    color: white;
+    font-size: 16px;
+    line-height: 1.5;
+}
+

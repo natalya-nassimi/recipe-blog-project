@@ -89,10 +89,14 @@ const RecipeDetails = () => {
                             </section>
                         )}
 
-                        <section>
+                        <section className='comments-section'>
                             <h1>Comments</h1>
+                        < div className='comment-box'>
                             <CommentCreate recipe={recipe} recipeId={recipeId}setRecipe={setRecipe} user={user}></CommentCreate>
+                        </div>
+                        <div className='comment-feed'>
                             <CommentFeed recipe={recipe}></CommentFeed>
+                        </div>
                         </section>
                     </div>
                 </div>
