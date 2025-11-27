@@ -1,19 +1,21 @@
+import './CommentFeed.css'
+
 const CommentFeed = ({ recipe }) => {
     return (
-        <div>
+        <div className="comment-feed">
             {recipe.comments.map((comment) => {
                 console.log(comment._id)
                 return (
-                    <div key={comment._id}>
-                        <div>
+                    <div key={comment._id} className="comment-card">
+                        <div className="comment-header">
                             {/*Username */}
-                            <p>{comment.author.username}</p>
+                            <p className="comment-author">Posted By: {comment.author.username}</p>
                             {/*CommentDate */}
-                            <p>{comment.createdAt.split("T")[0]}</p>
+                            <p className="comment-date">{comment.createdAt.split("T")[0]}</p>
                         </div>
                         {/*CommentDescription */}
-                        <div>
-                            <p>{comment.description}</p>
+                        <div className="comment-body">
+                            <p className="comment-description">{comment.description}</p>
                         </div>
                     </div>
                 )
