@@ -4,7 +4,6 @@ const CommentFeed = ({ recipe }) => {
     return (
         <div className="comment-feed">
             {recipe.comments.map((comment) => {
-                console.log(comment._id)
                 return (
                     <div key={comment._id} className="comment-card">
                         <div className="comment-header">

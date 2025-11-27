@@ -9,7 +9,6 @@ const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
         description: "",
         author: {}
     });
-    console.log(user)
     const [errorData, setErrorData] = useState({})
     const [isCommentOpen, setIsCommentOpen] = useState(false)
     const navigate = useNavigate();
@@ -30,7 +29,6 @@ const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
         event.preventDefault()
         try {
             const { data } = await recipeCommentCreate(recipeId, formData);
-            console.log(data)
             toast("Successfully created comment.");
             setRecipe(prev => ({ ...prev, ["comments"]: [...prev["comments"], data] }))
             setFormData({
@@ -46,7 +44,6 @@ const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
             })
         }
     }
-    console.log(formData)
     return (
         <div>
             {!recipe.comments.length > 0 &&
