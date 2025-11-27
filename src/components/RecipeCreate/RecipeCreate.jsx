@@ -25,7 +25,6 @@ const RecipeCreate = () => {
             const { data } = await recipeCreate(formData);
             navigate(`/recipes/${data._id}`);
         } catch (error) {
-            console.log(error)
             const {data} = error.response;
             if (error.response.status === 500) {
                 toast("Something went wrong!")

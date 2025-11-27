@@ -37,7 +37,6 @@ const RecipeEdit = () => {
                 }
                 setFormData(data);
             } catch (error) {
-                // if()
                 const {status, data} = error.response;
                  if (status === 500) {
                     setErrorData({ message: 'Something went wrong. Please try again.' });
@@ -351,10 +350,6 @@ const RecipeEdit = () => {
             case 4:
                 return (
                     <section>
-                        {/* <div className="form-control">
-                            <label htmlFor="image">Show off a picture of your meal</label>
-                            <input type="file" name="image" id="" accept="image/*" value={formData.image} onChange={handleChange} />
-                        </div> */}
                         <ImageUploadField
                             labelText="Show off a picture of your meal"
                             fieldName='Image'

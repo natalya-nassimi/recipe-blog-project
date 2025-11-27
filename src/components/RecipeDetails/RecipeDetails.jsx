@@ -31,13 +31,17 @@ const RecipeDetails = () => {
                 setLoading(false)
                 setRecipe(data);
             } catch (error) {
-                console.log(error)
                 if (error.response.status === 500) {
                     setErrorData({ message: 'Something went wrong. Please try again' })
+                    toast("Something went wrong. Please try again later");
                 } else if (error.response.status === 404) {
                     navigate('/page-not-found')
                 } else {
-                    setErrorData(error.response.data)
+                    setErrorData(error.response.data);
+                    const {data} =  error.response.data;
+                    Object.keys(data).map(parameter =>{
+                        toast(data[parameter])
+                    })
                 }
             } finally {
                 setLoading(false)
