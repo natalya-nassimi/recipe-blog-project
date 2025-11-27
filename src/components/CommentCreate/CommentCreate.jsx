@@ -2,7 +2,8 @@
 import { toast } from "react-toastify";
 import { recipeCommentCreate } from "../../services/recipes";
 import { useState } from "react";
-const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
+import { useNavigate } from "react-router";
+const CommentCreate = ({ recipe, recipeId, setRecipe, user }) => {
     const [formData, setFormData] = useState({
         rating: "",
         description: "",
@@ -11,6 +12,7 @@ const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
     console.log(user)
     const [errorData, setErrorData] = useState({})
     const [isCommentOpen, setIsCommentOpen] = useState(false)
+    const navigate = useNavigate();
     const handleWriteComment = (event) => {
         event.preventDefault()
         if (!user) {
@@ -21,19 +23,20 @@ const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
     }
     const handleChange = (event) => {
         const description = event.target.value;
-        setFormData({...formData, [event.target.name]: description})
+        setFormData({ ...formData, [event.target.name]: description })
 
     }
     const handleSubmitComment = async (event) => {
         event.preventDefault()
         try {
-            const { data } = await recipeCommentCreate(recipeId,formData);
+            const { data } = await recipeCommentCreate(recipeId, formData);
+            console.log(data)
             toast("Successfully created comment.");
             // console.log( {...formData, [author]: user})
-            setRecipe(prev => ({...prev, ["comments"]: [...prev["comments"], {...formData, ["author"]: user}]}))
+            setRecipe(prev => ({ ...prev, ["comments"]: [...prev["comments"], data] }))
             setFormData({
                 rating: "",
-                description: ""                 
+                description: ""
             })
             setIsCommentOpen(false);
         } catch (error) {
@@ -48,12 +51,12 @@ const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
             {!recipe.comments.length > 0 &&
                 <p>Be the first to leave a comment.</p>
             }
-            {!isCommentOpen && <button onClick={handleWriteComment}>Leave comment</button>}
+            {!isCommentOpen && <button onClick={handleWriteComment}>{user?"Leave comment": "Sign in to leave a comment"}</button>}
             {isCommentOpen && <div>
                 <form action="">
                     <textarea name="description" onChange={handleChange} value={formData.description} required>  </textarea>
                     <button onClick={() => setIsCommentOpen(false)}>Close</button>
-                    <button onClick={handleSubmitComment}>Post</button>                    
+                    <button onClick={handleSubmitComment}>Post</button>
                 </form>
 
             </div>
