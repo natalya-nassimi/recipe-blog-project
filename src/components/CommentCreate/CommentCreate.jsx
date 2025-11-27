@@ -5,8 +5,10 @@ import { useState } from "react";
 const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
     const [formData, setFormData] = useState({
         rating: "",
-        description: ""
+        description: "",
+        author: {}
     });
+    console.log(user)
     const [errorData, setErrorData] = useState({})
     const [isCommentOpen, setIsCommentOpen] = useState(false)
     const handleWriteComment = (event) => {
@@ -27,13 +29,15 @@ const CommentCreate = ({recipe, recipeId, setRecipe, user}) => {
         try {
             const { data } = await recipeCommentCreate(recipeId,formData);
             toast("Successfully created comment.");
-            setRecipe(prev => ({...prev, ["comments"]: [...prev["comments"], formData]}))
+            // console.log( {...formData, [author]: user})
+            setRecipe(prev => ({...prev, ["comments"]: [...prev["comments"], {...formData, ["author"]: user}]}))
             setFormData({
                 rating: "",
                 description: ""                 
             })
             setIsCommentOpen(false);
         } catch (error) {
+            console.log(error)
             setErrorData(error.response.data);
             toast(error.response.data.message);
         }
