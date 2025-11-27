@@ -3,10 +3,20 @@ import { recipeShow } from "../../services/recipes";
 import { useNavigate, useParams } from "react-router";
 import DeleteRecipe from "../DeleteRecipe/DeleteRecipe";
 import { UserContext } from "../../contexts/UserContext";
+import { toast, ToastContainer } from "react-toastify";
 import './RecipeDetails.css'
+import CommentCreate from "../CommentCreate/CommentCreate";
+import CommentFeed from "../CommentFeed/CommentFeed";
 
 const RecipeDetails = () => {
-    const [recipe, setRecipe] = useState({})
+    const [recipe, setRecipe] = useState({
+        name: "",
+        ingredients: [],
+        preparationTime: "",
+        image: "",
+        instructions: [],
+        comments: []
+    })
     const [loading, setLoading] = useState(true);
     const [errorData, setErrorData] = useState({})
     const navigate = useNavigate()
@@ -21,18 +31,19 @@ const RecipeDetails = () => {
             } catch (error) {
                 console.log(error)
                 if (error.response.status === 500) {
-                setErrorData({ message: 'Something went wrong. Please try again' })
+                    setErrorData({ message: 'Something went wrong. Please try again' })
                 } else if (error.response.status === 404) {
-                navigate('/page-not-found')
+                    navigate('/page-not-found')
                 } else {
-                setErrorData(error.response.data)
-                }                
+                    setErrorData(error.response.data)
+                }
             } finally {
                 setLoading(false)
             }
         }
         getRecipe();
     }, [recipeId, navigate])
+
 
     return (
         loading ? <p className="loading">Loading ...</p> :
@@ -66,18 +77,25 @@ const RecipeDetails = () => {
                             </ol>
                         </section>
 
-                        <section>
-                            {user._id === recipe.author._id && (
+                        {user && user._id === recipe.author._id && (
+                            <section>
                                 <div className='user-actions'>
                                     <button className='edit-btn' onClick={() => navigate(`/recipes/${recipeId}/edit`)}>
                                         Edit Recipe
                                     </button>
-                                <DeleteRecipe recipeId={recipeId} />
+                                    <DeleteRecipe recipeId={recipeId} />
                                 </div>
-                            )}
+                            </section>
+                        )}
+
+                        <section>
+                            <h1>Comments</h1>
+                            <CommentCreate recipe={recipe} recipeId={recipeId}setRecipe={setRecipe} user={user}></CommentCreate>
+                            <CommentFeed recipe={recipe}></CommentFeed>
                         </section>
                     </div>
                 </div>
+                <ToastContainer/>
             </>
     )
 }
