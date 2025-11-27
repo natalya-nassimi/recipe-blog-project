@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { UserContext } from "../../contexts/UserContext"
 import { recipeShow } from "../../services/recipes";
 import { recipeEdit } from "../../services/recipes";
+import LoadingIcon from "../LoadingIcon/LoadingIcon";
 const RecipeEdit = () => {
     const {user} = useContext(UserContext);
     const [formData, setFormData] = useState({
@@ -373,7 +374,7 @@ const RecipeEdit = () => {
 
     return (
 
-        isLoading ? <p>Loading Screen</p> :
+        isLoading ? <LoadingIcon></LoadingIcon>  :
 
             <section>
                 <form action="" onSubmit={handleSubmit}>

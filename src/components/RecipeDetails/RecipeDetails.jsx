@@ -7,7 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import './RecipeDetails.css'
 import CommentCreate from "../CommentCreate/CommentCreate";
 import CommentFeed from "../CommentFeed/CommentFeed";
-
+import LoadingIcon from "../LoadingIcon/LoadingIcon";
 const RecipeDetails = () => {
     const [recipe, setRecipe] = useState({
         name: "",
@@ -47,7 +47,7 @@ const RecipeDetails = () => {
 
     return (
         <>
-        {errorData.message ? <p className="error-message">{errorData.message}</p>:(loading ? <p className="loading">Loading ...</p> :
+        {errorData.message ? <p className="error-message">{errorData.message}</p>:(loading ? <LoadingIcon></LoadingIcon> :
             <>
                 <div className='recipe-details-container'>
                     <section className="recipe-header-card">
