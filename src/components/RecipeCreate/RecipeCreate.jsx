@@ -19,8 +19,7 @@ const RecipeCreate = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-
-            await recipeCreate(formData);
+            const { data } = await recipeCreate(formData);
             navigate(`/recipes/${data._id}`);
         } catch (error) {
             console.log(error)
@@ -146,12 +145,15 @@ const RecipeCreate = () => {
                     return true;
                 }
             case 2:
-                if (formData.preparationTime.trim() === "") {
+                if (typeof formData.preparationTime ==="string" && formData.preparationTime.trim() === "") {
                     setErrorData(prev => ({ ...prev, ["message"]: 'No preparation time was specified. Please specify a preparation duration.' }));
                     toast('No preparation time was specified. Please specify a preparation duration.' )
                     return true;
-                }
-                 else if(formData.preparationTime <0){
+                }else if(formData.preparationTime === null){
+                    setErrorData(prev => ({ ...prev, ["message"]: 'No preparation time was specified. Please specify a preparation duration.' }));
+                    toast('No preparation time was specified. Please specify a preparation duration.' )
+                    return true;
+                }else if(formData.preparationTime <0){
                     setErrorData(prev => ({ ...prev, ["message"]: 'The preparation time must not be negative. Specify a non negative duration.' }));
                     toast('The preparation time must not be negative. Specify a non negative duration.')
                     return true;
@@ -293,7 +295,7 @@ const RecipeCreate = () => {
                                         <li key={index} draggable="true">
                                             <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange} required></textarea>
                                             <button onClick={removeInstructions}>Remove</button>
-                                           {(errorData.message && errorData.message.constructor === Array && errorData.message.includes(index))? <p  className='error-message'>No instruction was specified</p>:null} 
+                                           {(errorData.message && errorData.message.constructor === Array && errorData.message.includes(index))? <p  className='error-message'>No instruction was specified.</p>:null} 
                                         </li>
                                     )
                                 })
