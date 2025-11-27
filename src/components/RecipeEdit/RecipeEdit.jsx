@@ -5,6 +5,9 @@ import { UserContext } from "../../contexts/UserContext"
 import { recipeShow } from "../../services/recipes";
 import { recipeEdit } from "../../services/recipes";
 import LoadingIcon from "../LoadingIcon/LoadingIcon";
+import ImageUploadField from "../ImageUploadField/ImageUpload";
+import './RecipeEdit.css'
+
 const RecipeEdit = () => {
     const {user} = useContext(UserContext);
     const [formData, setFormData] = useState({
@@ -19,6 +22,10 @@ const RecipeEdit = () => {
     const [isLoading, setIsLoading] = useState(true);
     const { recipeId } = useParams();
     const navigate = useNavigate();
+
+    const setMealImage = (imageURL) => {
+        setFormData({ ...formData, image: imageURL})
+    }
     
     useEffect(() => {
         const getFormData = async () => {
@@ -258,7 +265,7 @@ const RecipeEdit = () => {
                 return (
                     <section>
                         <h3>Ingredients</h3>
-                        <button onClick={addIngredient}>
+                        <button className='add' onClick={addIngredient}>
                             <p>Add Ingredients</p>
                             <i className="fa fa-plus-circle" aria-hidden="true"></i>
                         </button>
@@ -285,7 +292,7 @@ const RecipeEdit = () => {
                                             <option value="tbsp">tbsp</option>
                                         </select>
                                         {(errorData.message && typeof errorData.message === 'object' && errorData.message[index] && errorData.message[index]["unit"])? <p className='error-message'>{errorData.message[index]["unit"]}</p>:null}
-                                        <button onClick={removeIngredient}>
+                                        <button className='remove-btn' onClick={removeIngredient}>
                                             Remove
                                         </button>
                                     </div>
@@ -320,14 +327,14 @@ const RecipeEdit = () => {
                 return (
                     <section >
                         <h3>Instructions</h3>
-                        <button onClick={addInstruciton}>Add instruction</button>
+                        <button className='add' onClick={addInstruciton}>Add instruction</button>
                         <ol>
                             {
                                 formData.instructions.map((instruction, index) => {
                                     return (
-                                        <li key={index} draggable="true">
+                                        <li className='form-control' key={index} draggable="true">
                                             <textarea value={instruction} name={`instruction-${index}`} onChange={handleInstructionChange} required></textarea>
-                                            <button onClick={removeInstructions}>Remove</button>
+                                            <button className='remove-btn' onClick={removeInstructions}>Remove</button>
                                            {(errorData.message && errorData.message.constructor === Array && errorData.message.includes(index))? <p  className='error-message'>No instruction was specified.</p>:null} 
                                         </li>
                                     )
@@ -344,10 +351,16 @@ const RecipeEdit = () => {
             case 4:
                 return (
                     <section>
-                        <div className="form-control">
+                        {/* <div className="form-control">
                             <label htmlFor="image">Show off a picture of your meal</label>
                             <input type="file" name="image" id="" accept="image/*" value={formData.image} onChange={handleChange} />
-                        </div>
+                        </div> */}
+                        <ImageUploadField
+                            labelText="Show off a picture of your meal"
+                            fieldName='Image'
+                            setImage={setMealImage}
+                            existingImage={formData.image}
+                        />
                         {errorData.image && <p className='error-message'>{errorData.image}</p>}
                         <div className="formNavigation">
                             <button onClick={previousPage}>Previous</button>
