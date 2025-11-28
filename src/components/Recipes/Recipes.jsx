@@ -80,9 +80,10 @@ const Recipes = ({ filterByUser, userId }) => {
             : (isLoading
                 ? <LoadingIcon></LoadingIcon> 
                 :<>
-                    <label htmlFor="searchbar">Search</label>
-                    <input type="search" name="searchbar" placeholder="Search by recipe name, ingredients or author" onChange={handleSearch} />
-                    <p>Tip: You can search by specifically name author or ingredient but using "name-", "author-" or "ingredient-"</p>
+                <div className="searchbar-container">
+                    <input type="search" name="searchbar" placeholder="Search recipes..." onChange={handleSearch} />
+                    <p className="search-tip">Tip: You can search by name author or ingredient but using 'name-', 'author-'' or 'ingredient-'</p>
+                    </div>
                     <section className="recipes-container">
                         
                         {queryfilteredRecipes.length > 0 ? queryfilteredRecipes.map(recipe => {

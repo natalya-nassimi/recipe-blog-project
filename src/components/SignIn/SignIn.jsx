@@ -44,12 +44,12 @@ const SignIn = () => {
             <h1>Sign In</h1>
             <form className='signin-form' onSubmit={handleSubmit}>
 
-                <div className='form-control'>
+                <div className='form-control-sign-in'>
                     <label hidden htmlFor='username'>Username</label>
                     <input type='text' name='username' id='username' placeholder='Username' onChange={handleChange} required />
                 </div>
 
-                <div className='form-control'>
+                <div className='form-control-sign-in'>
                     <label hidden htmlFor='password'>Password</label>
                     <input type='password' name='password' id='password' placeholder='Password' onChange={handleChange} required />
                 </div>

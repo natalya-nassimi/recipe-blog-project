@@ -263,11 +263,7 @@ const RecipeEdit = () => {
             case 1:
                 return (
                     <section>
-                        <h3>Ingredients</h3>
-                        <button className='add' onClick={addIngredient}>
-                            <p>Add Ingredients</p>
-                            <i className="fa fa-plus-circle" aria-hidden="true"></i>
-                        </button>
+                        <button className='add' onClick={addIngredient}>Add Ingredient</button>
                         <div>
                             {formData.ingredients.map((ingredient, index) => {
                                 return (
@@ -325,7 +321,6 @@ const RecipeEdit = () => {
             case 3:
                 return (
                     <section >
-                        <h3>Instructions</h3>
                         <button className='add' onClick={addInstruciton}>Add instruction</button>
                         <ol>
                             {

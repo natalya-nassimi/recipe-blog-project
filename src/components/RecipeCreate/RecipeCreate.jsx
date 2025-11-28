@@ -75,7 +75,7 @@ const RecipeCreate = () => {
         })
         setFormData(newFormData);
     }
-    const addInstruciton = (event) => {
+    const addInstruction = (event) => {
         event.preventDefault();
         const newFormData = { ...formData };
         newFormData.instructions.push("");
@@ -235,10 +235,7 @@ const RecipeCreate = () => {
             case 1:
                 return (
                     <section>
-                        <h3>Ingredients</h3>
-                        <button className='add' onClick={addIngredient}>
-                            <p>Add Ingredients</p>
-                        </button>
+                        <button className='add' onClick={addIngredient}>Add Ingredients</button>
                         <div>
                             {formData.ingredients.map((ingredient, index) => {
                                 return (
@@ -296,8 +293,7 @@ const RecipeCreate = () => {
             case 3:
                 return (
                     <section >
-                        <h3>Instructions</h3>
-                        <button className='add' onClick={addInstruciton}>Add instruction</button>
+                        <button className='add' onClick={addInstruction}>Add instruction</button>
                         <ol>
                             {
                                 formData.instructions.map((instruction, index) => {

@@ -10,3 +10,35 @@ body {
     gap: 40px;
     padding: 0 30px;
 }
+
+.searchbar-container {
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    padding: 20px 20px;
+    border-radius: 15px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #0b376332;
+}
+
+.searchbar-container label {
+    display: block;
+    font-size: 22px;
+}
+
+.searchbar-container input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+}
+
+.search-tip {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #07315a;
+    padding: 10px 10px;
+    border-radius: 10px;
+    background-color: rgba(240, 248, 255, 0.712);
+    font-family:Verdana, Geneva, Tahoma, sans-serif
+}

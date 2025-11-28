@@ -10,31 +10,33 @@ form {
 .form-control {
     display: flex;
     flex-direction: column;
-    margin-bottom: 30px;
-    gap: 8px;
+    margin-bottom: 10px;
+    gap: 5px;
     justify-content: center;
 }
 
 .form-control label {
     font-weight: 400;
-    font-size: 20px;
+    font-size: 15px;
     color: #07315a;
-    margin-bottom: 5px;
-    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    text-align: left;
 }
 
 .form-control input,
 .form-control select,
 .form-control textarea {
-    padding: 10px 10px;
+    padding: 7px 7px;
     border-radius: 10px;
     border: none;
-    font-size: 15px;
+    font-size: 14px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .error-message {
     color: #ff0000;
-    font-size: 18px;
+    font-size: 14px;
     margin-top: 5px;
     font-weight: 300;
 }
@@ -44,17 +46,16 @@ form {
     justify-content: space-between;
 }
 
-.formNavigation button,
-.add {
+.formNavigation button {
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 400;
     padding: 10px 25px;
     background-color: #07315a;
     color: white;
-    margin-bottom: 15px;
+    margin-top: 15px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
@@ -67,9 +68,9 @@ form {
     background-color: #98271a;
     color: white;
     border-radius: 15px;
-    padding: 10px;
-    margin-top: 10px;
-    font-size: 15px;
+    padding: 7px 0;
+    margin-top: 5px;
+    font-size: 14px;
     border: none;
 }
 
@@ -77,8 +78,15 @@ form {
     background-color: #98271a92;
 }
 
-h3 {
-    margin-top: 5px;
-    font-weight: 300;
-    font-size: 30px;
+.add {
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    justify-content: left;
+    font-size: 15px;
+    font-weight: 400;
+    padding: 10px 20px;
+    background-color: #07315a;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
