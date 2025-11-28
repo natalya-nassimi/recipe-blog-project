@@ -40,25 +40,25 @@ const SignUp = () => {
             <h1>Create an account</h1>
             <form className='signup-form' onSubmit={handleSubmit}>
 
-                <div className='form-control'>
+                <div className='form-control-sign-up'>
                     <label hidden htmlFor='username'>Username</label>
                     <input type='text' name='username' id='username' placeholder='Username' onChange={handleChange} required />
                     { error.username && <p className='error-message'>{error.username}</p> }
                 </div>
 
-                <div className='form-control'>
+                <div className='form-control-sign-up'>
                     <label hidden htmlFor='email'>Email</label>
                     <input type='text' name='email' id='email' placeholder='Email' onChange={handleChange} required />
                     { error.email && <p className='error-message'>{error.email}</p> }
                 </div>
 
-                <div className='form-control'>
+                <div className='form-control-sign-up'>
                     <label hidden htmlFor='password'>Password</label>
                     <input type='password' name='password' id='password' placeholder='Password' onChange={handleChange} required />
                     { error.password && <p className='error-message'>{error.password}</p> }
                 </div>
 
-                <div className='form-control'>
+                <div className='form-control-sign-up'>
                     <label hidden htmlFor='confirmPassword'>Re enter your password</label>
                     <input type='text' name='confirmPassword' id='confirmPassword' placeholder='Re enter your password' onChange={handleChange} required />
                     { error.confirmPassword && <p className='error-message'>{error.confirmPassword}</p> }
