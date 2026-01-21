@@ -1,4 +1,4 @@
-<h1> align='center'>Recipe Blog App 👩‍🍳</h1>
+<h1 align='center'>Recipe Blog App 👩‍🍳</h1>
 
 ## Description
 A full MERN stack CRUD app built after completing Module 3 of the Software Engineering Bootcamp.
